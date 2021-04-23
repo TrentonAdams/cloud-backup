@@ -1,13 +1,13 @@
 #!/bin/bash
-# Note: to list or restore files, simple cat (shell expansion is sorted)
-# cat backup-name-####.backup | gpg -d - | tar -tvz
-# cat backup-name-####.backup | gpg -d - | tar -xvz
+# Note: to list or restore files, simple cat (shell expansion sorts files in the correct alphabetical order)
+# cat backup-name-####.backup* | gpg -d - | tar -tvz
+# cat backup-name-####.backup* | gpg -d - | tar -xvz
 # do the above with each subsequent incremental backup, but decrypt the \
 # snapshot first, and use -g.  We'll add a restore feature shortly.
 # This is required in order to detect which files were deleted between each
 # backup, and have tar remove them for you automatically as part of the restore.
 # gpg -d backup-name-####.spb > backup-name-####.sp
-# cat backup-name-####.backup | gpg -d - | tar -xvzg backup-name-####.sp
+# cat backup-name-####.backup* | gpg -d - | tar -xvzg backup-name-####.sp
 
 
 # This script is based on simple concepts
@@ -82,16 +82,8 @@ done
 [[ -d "$source_folder" ]] || { exitWith "missing source folder $source_folder"; }
 
 function encrypt(){
-#   openssl enc -aes-256-cbc -pbkdf2 -iter 1000 -pass "pass:$(pass show personal/backup)"
-  gpg -r trent.gpg@trentonadams.ca --encrypt 
+  gpg -r trent.gpg@trentonadams.ca --encrypt
 }
-
-# example decrypt
-#   openssl enc -d -aes-256-cbc -pass "pass:$(cat ~/.backup.cloud.pw)"
-#  gpg -d
-
-#[[ -f ~/.aws/bin/activate ]] || { exitWith "aws cli not installed";  }
-#source "/home/trenta/.aws/bin/activate"
 
 command -v split || { exitWith "split command not installed";}
 command -v aws || { exitWith "aws cli not installed"; }
