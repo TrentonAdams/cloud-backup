@@ -39,7 +39,6 @@ An example tar-excludes.txt follows.  Replace `username` with your `${USER}`
 ## TODO
                      
 * add tests for main program
-* finish parseArgs testing
 * add integrity check (`tar -tvzg file.sp`)
 * add restore script.
 * add backup deletion script.
