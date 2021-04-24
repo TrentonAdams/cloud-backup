@@ -19,3 +19,11 @@ cloud-tar: tests
 		cloud-tar.sh > cloud-tar
 	@chmod a+x cloud-tar
 	@echo './cloud-tar built'
+
+.PHONY: install
+install: cloud-tar
+	sudo install -m 755 -o root cloud-tar /usr/local/bin/
+
+.PHONY: uninstall
+uninstall: clean
+	@sudo rm -f /usr/local/bin/cloud-tar
