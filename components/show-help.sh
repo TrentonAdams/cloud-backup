@@ -1,6 +1,6 @@
 
 function show_help(){
-  printf "e.g. %s [-h|-?|--help] \n" "${0}"
+  printf "e.g. %s backup [-h|-?|--help] \n" "${0}"
   printf "\t<-p|--path backup-folder>       - the folder to backup to\n"
   printf "\t<-s|--source source-folder>     - the folder to backup\n"
   printf "\t<-n|--name>                     - the name of the backup\n"

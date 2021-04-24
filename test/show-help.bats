@@ -3,6 +3,12 @@ load 'libs/bats-support/load'
 load 'libs/bats-assert/load'
 source components/show-help.sh
 
+@test "requires show_help to show help on backup command" {
+  run show_help
+  # bats-exec-test is the $0 argument when testing, so we test for that.
+  assert_output --partial "bats-exec-test backup"
+}
+
 @test "requires show_help to show help on -p|--path" {
   run show_help
   assert_output --partial "-p|--path"
