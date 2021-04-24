@@ -2,7 +2,7 @@
 
 Backup scripts to manage incremental backups using gnu tar's incremental snapshot capability, while supporting an s3 sync as well.
 
-This is not ready for prime time, as I'm learning [BATS](https://github.com/sstephenson/bats) and adding a bunch of automated tests first.
+This should work for other people now.  I'm still I'm learning [BATS](https://github.com/sstephenson/bats) and adding a bunch of automated tests though to ensure everything continues working as expected as I continue to make adjustments.
                       
 To back up...
 1. user named "user"
