@@ -24,5 +24,4 @@ jobs:
         with:
           artifacts: "cloud-tar-*.tar.gz"
           prerelease: true
-          draft: true
           token: ${{ secrets.GITHUB_TOKEN }}
