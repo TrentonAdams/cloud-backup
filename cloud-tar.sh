@@ -74,7 +74,8 @@ fi
 # encrypt tar snapshot to snapshot backup
 cat "$backup_folder/${backup_name}.sp" | encrypt > "$backup_folder/${backup_name}.${index}.spb"
 
-if (($size > 3900000000)); then
+# 150MB backup size or higher is large.
+if (($size > 150000000)); then
   # TODO
   # - add step to print out how to revert the snapshot file and backup 
   #   to start over

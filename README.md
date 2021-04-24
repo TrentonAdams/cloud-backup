@@ -28,3 +28,5 @@ To back up...
 * add integrity check (`tar -tvzg file.sp`)
 * add restore script
 * make "splitting" at 4G an option, not a requirement.
+* create asciinema demo.
+* add argument for backup size warning
