@@ -7,7 +7,7 @@ clean:
 tests:
 	./test/libs/bats/bin/bats test/*.bats
 
-cloud-tar: tests
+cloud-tar:
 	@sed -e '/source components\/show-help.sh/ {' \
 		-e 'r components/show-help.sh' \
 		-e 'd' \
