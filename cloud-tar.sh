@@ -21,15 +21,8 @@
 #    copy them to a FAT32 USB drive.
 #
 
-function show_help(){
-  printf "e.g. %s [-h|-?|--help] \n" "${orig_args[0]}"
-  printf "\t<-p|--path backup-folder>       - the folder to backup to\n"
-  printf "\t<-s|--source source-folder>     - the folder to backup\n"
-  printf "\t<-n|--name>                     - the name of the backup\n"
-  printf "\n"
-  printf "\t[-b|--bucket s3-bucket-name]    - the s3 bucket name if you want to push to s3\n"
-  printf "\t[-e|--exclude tar-exclude-file] - the tar exclude file\n"
-}
+source show-help.sh
+
 
 function exitWith(){
   echo "$1";
@@ -39,45 +32,9 @@ function exitWith(){
 }
 
 skip_s3="true"
-# Here's some example parameter handling, -d has no args, -p has an argument
-while :; do
-  case $1 in
-    -h|-\?|--help)
-      show_help    # Display a usage synopsis.
-      exit
-      ;;
-    -b|--bucket)
-      shift
-      s3_bucket_name="$1"
-      unset skip_s3
-      ;;
-    -e|--exclude)
-      shift
-      backup_exclude=("--exclude-from")
-      backup_exclude+=("$1")
-      ;;
-    -p|--path)
-      shift
-      backup_folder="$1"
-      ;;
-    -s|--source)
-      shift
-      source_folder+=("$1")
-      ;;
-    -n|--name)
-      shift
-      backup_name="$1"
-      ;;
-    ?*)
-      args+=($1)
-      ;;
-    *)
-      break;
-      ;;
-    esac
 
-    shift
-done
+source parse-args.sh
+parseArgs "$@"
 
 [[ -d "$source_folder" ]] || { exitWith "missing source folder $source_folder"; }
 
