@@ -28,6 +28,10 @@ while :; do
       shift
       printf "backup_name='%s'\n" "$1"
       ;;
+    -r|--recipient)
+      shift
+      printf "gpg_recipient='%s'\n" "$1"
+      ;;
     ?*)
       printf "args+=('%s')\n" "$1"
       ;;

@@ -7,7 +7,7 @@ This is not ready for prime time, as I'm learning [BATS](https://github.com/sste
 To back up...
 1. user named "user"
 2. to folder `/media/backup/cloud-tar`
-3. with gpg encryption to trent.gpg@trentonadams.ca (hard coding to be fixed shortly)
+3. with gpg encryption to gpg recipient `me@example.com`
 4. an s3 sync to s3 bucket named user-backup-home
 5. using `~/backup/tar-excludes.txt` as the tar exclusion file
 
@@ -16,13 +16,13 @@ To back up...
   -s /home/user/ \
   -p /media/backup/cloud-tar \
   -n home \
+  -r me@example.com \
   -e ~/backup/tar-excludes.txt \
   -b user-backup-home;
 ```
 
 # TODO
                      
-* add gpg recipient argument
 * finish parseArgs testing
 * add integrity check (`tar -tvzg file.sp`)
 * add restore script

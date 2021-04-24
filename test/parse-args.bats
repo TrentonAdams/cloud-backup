@@ -18,3 +18,11 @@ source parse-args.sh
   eval "${output}"
   assert [ -z "${skip_s3}" ]
 }
+
+@test "parseArgs with -r should set gpg_recipient env var" {
+  # we trust the output here to be env vars from parseArgs
+  run parseArgs -r me@example.com
+  eval "${output}"
+  refute [ -z "${gpg_recipient}" ]
+  assert [ "me@example.com" == "${gpg_recipient}" ]
+}
