@@ -26,6 +26,16 @@ source components/parse-args.sh
   assert [ -z "${skip_s3}" ]
 }
 
+@test "parseArgs with -e should set backup_exclude env array" {
+  # we trust the output here to be env vars from parseArgs
+  run parseArgs -e excludes.txt
+  eval "${output}"
+  refute [ -z "${backup_exclude}" ]
+  assert [ 2 -eq "${#backup_exclude[@]}" ]
+  assert [ "--exclude-from" == "${backup_exclude[0]}" ]
+  assert [ "excludes.txt" == "${backup_exclude[1]}" ]
+}
+
 @test "parseArgs with -r should set gpg_recipient env var" {
   # we trust the output here to be env vars from parseArgs
   run parseArgs -r me@example.com
