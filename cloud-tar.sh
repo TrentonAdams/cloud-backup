@@ -41,7 +41,7 @@ my_args=`parseArgs "$@"`
 
 eval "${my_args}"
 
-[[ -d "$source_folder" ]] || { exitWith "missing source folder $source_folder"; }
+[[ -d "${source_folder}" ]] || { exitWith "missing source folder ${source_folder}"; }
 
 function encrypt(){
   gpg -r "${gpg_recipient}" --encrypt
@@ -50,32 +50,32 @@ function encrypt(){
 command -v split || { exitWith "split command not installed";}
 command -v aws || { exitWith "aws cli not installed"; }
 command -v tar || { exitWith "tar not installed"; }
-[[ -d "$backup_folder" ]] || { exitWith "missing backup folder $backup_folder" ; }
+[[ -d "${backup_folder}" ]] || { exitWith "missing backup folder ${backup_folder}" ; }
 
 [[ "function" == "$(type -t encrypt)" ]] || { exitWith "encrypt function must exist"; }
-[[ ! -z "$backup_name" ]] || { exitWith "backup name empty"; }
-[[ ! -z "$gpg_recipient" ]] || { exitWith "missing gpg recipient" ; }
+[[ ! -z "${backup_name}" ]] || { exitWith "backup name empty"; }
+[[ ! -z "${gpg_recipient}" ]] || { exitWith "missing gpg recipient" ; }
 
-[[ "true" == "$skip_s3" ]] || aws s3 ls "$s3_bucket_name" >/dev/null || exitWith "s3 bucket access problem?"
+[[ "true" == "$skip_s3" ]] || aws s3 ls "${s3_bucket_name}" >/dev/null || exitWith "s3 bucket access problem?"
 
 index=$(date +'%s')
 
 # a previous snapshot does not exist, let's label this level 0
-[[ -f "$backup_folder/${backup_name}.sp" ]] || { index=0 ; }
-backup_file="$backup_folder/${backup_name}.${index}.backup"
+[[ -f "${backup_folder}/${backup_name}.sp" ]] || { index=0 ; }
+backup_file="${backup_folder}/${backup_name}.${index}.backup"
 
-tar -czg "$backup_folder/${backup_name}.sp" ${backup_exclude[@]} \
+tar -czg "${backup_folder}/${backup_name}.sp" ${backup_exclude[@]} \
   "${source_folder[@]}" | encrypt > "$backup_file"
 
-size=$(stat --printf="%s" "$backup_file")
+size=$(stat --printf="%s" "${backup_file}")
 if (($size > 3900000000)); then 
   echo "berry large file, won't fit on FAT32";
-  split -b 3G "$backup_file" "$backup_file"
-  rm "$backup_file"  # delete original, it's now split into multiple segments
+  split -b 4G "${backup_file}" "${backup_file}"
+  rm "${backup_file}"  # delete original, it's now split into multiple segments
 fi
 
 # encrypt tar snapshot to snapshot backup
-cat "$backup_folder/${backup_name}.sp" | encrypt > "$backup_folder/${backup_name}.${index}.spb"
+cat "${backup_folder}/${backup_name}.sp" | encrypt > "${backup_folder}/${backup_name}.${index}.spb"
 
 # 150MB backup size or higher is large.
 if (($size > 150000000)); then
@@ -90,9 +90,9 @@ if (($size > 150000000)); then
   echo >> $tmp_file
   echo "If this is your first backup, or you expected it to be large, you may ignore this." >> $tmp_file
   echo >> $tmp_file
-  echo "If you'd like to start over, delete $backup_file, and " >> $tmp_file
-  echo "restore the most recent $backup_folder/${backup_name}.###.spb" >> $tmp_file
-  echo "to $backup_folder/${backup_name}.sp, but remember to decrypt" >> $tmp_file
+  echo "If you'd like to start over, delete ${backup_file}, and " >> $tmp_file
+  echo "restore the most recent ${backup_folder}/${backup_name}.###.spb" >> $tmp_file
+  echo "to ${backup_folder}/${backup_name}.sp, but remember to decrypt" >> $tmp_file
   echo "it." >> $tmp_file
 
   cat "${tmp_file}"
@@ -100,4 +100,4 @@ fi
 
 # ${backup_name}.sp stays unencrypted for next round, so we don't upload it
 [[ "$skip_s3" != "true" ]] && \
-  aws s3 sync "$backup_folder/" s3://$s3_bucket_name/ --exclude '*.sp'
+  aws s3 sync "${backup_folder}/" "s3://${s3_bucket_name}/" --exclude '*.sp'
