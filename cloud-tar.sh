@@ -37,7 +37,7 @@ function encrypt(){
 
 function main() {
   skip_s3="true"
-  my_args=`parseArgs "$@"`
+  my_args=`parseBackupArgs "$@"`
   eval "${my_args}"
 
   verifyArgs

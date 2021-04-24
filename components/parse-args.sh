@@ -2,7 +2,24 @@
 # and functions in subshells, so any environment setting within a function is
 # not available in a test.
 
-function parseArgs() {
+function parseCommands() {
+  echo "mode=unselected;"
+# Here's some example parameter handling, -d has no args, -p has an argument
+while :; do
+  case $1 in
+    backup)
+      echo "mode=backup;"
+      ;;
+    *)
+      break;
+      ;;
+    esac
+
+    shift
+done
+}
+
+function parseBackupArgs() {
 # Here's some example parameter handling, -d has no args, -p has an argument
 while :; do
   case $1 in
@@ -52,6 +69,7 @@ done
 #  non-zero
 function verifyArgs() {
   [[ ! -z "${show_help}" ]] && { show_help; exit 1; }
+  [[ ${mode} == unselected ]] && { exitWith "no selected command"; }
   [[ -d "${source_folder}" ]] || { exitWith "missing source folder ${source_folder}"; }
   [[ -d "${backup_folder}" ]] || { exitWith "missing backup folder ${backup_folder}" ; }
   [[ "function" == "$(type -t encrypt)" ]] || { exitWith "encrypt function must exist"; }

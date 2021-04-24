@@ -3,32 +3,48 @@ load 'libs/bats-support/load'
 load 'libs/bats-assert/load'
 source components/parse-args.sh
 
-@test "parseArgs with -h should set show_help env var" {
-  # we trust the output here to be env vars from parseArgs
-  run parseArgs -h
+@test "parseCommands with no command should set mode=unselected env var" {
+  # we trust the output here to be env vars from parseBackupArgs
+  run parseCommands
+  eval "${output}"
+  refute [ -z "${mode}" ]
+  assert [ "${mode}" == "unselected" ]
+}
+
+@test "parseCommands with backup command should set mode=backup env var" {
+  # we trust the output here to be env vars from parseBackupArgs
+  run parseCommands backup
+  eval "${output}"
+  refute [ -z "${mode}" ]
+  assert [ "${mode}" == "backup" ]
+}
+
+@test "parseBackupArgs with -h should set show_help env var" {
+  # we trust the output here to be env vars from parseBackupArgs
+  run parseBackupArgs -h
   eval "${output}"
   refute [ -z "${show_help}" ]
 }
 
-@test "parseArgs with -b should set s3_bucket_name env var" {
-  # we trust the output here to be env vars from parseArgs
-  run parseArgs -b bucket-name
+@test "parseBackupArgs with -b should set s3_bucket_name env var" {
+  # we trust the output here to be env vars from parseBackupArgs
+  run parseBackupArgs -b bucket-name
   eval "${output}"
   refute [ -z "${s3_bucket_name}" ]
   assert [ "bucket-name" == "${s3_bucket_name}" ]
 }
 
-@test "parseArgs with -b should unset skip_s3 env var" {
-  # we trust the output here to be env vars from parseArgs
+@test "parseBackupArgs with -b should unset skip_s3 env var" {
+  # we trust the output here to be env vars from parseBackupArgs
   skip_s3=true
-  run parseArgs -b bucket-name
+  run parseBackupArgs -b bucket-name
   eval "${output}"
   assert [ -z "${skip_s3}" ]
 }
 
-@test "parseArgs with -e should set backup_exclude env array" {
-  # we trust the output here to be env vars from parseArgs
-  run parseArgs -e excludes.txt
+@test "parseBackupArgs with -e should set backup_exclude env array" {
+  # we trust the output here to be env vars from parseBackupArgs
+  run parseBackupArgs -e excludes.txt
   eval "${output}"
   refute [ -z "${backup_exclude}" ]
   assert [ 2 -eq "${#backup_exclude[@]}" ]
@@ -36,17 +52,17 @@ source components/parse-args.sh
   assert [ "excludes.txt" == "${backup_exclude[1]}" ]
 }
 
-@test "parseArgs with -p should set backup_folder env var" {
-  # we trust the output here to be env vars from parseArgs
-  run parseArgs -p backup-folder
+@test "parseBackupArgs with -p should set backup_folder env var" {
+  # we trust the output here to be env vars from parseBackupArgs
+  run parseBackupArgs -p backup-folder
   eval "${output}"
   refute [ -z "${backup_folder}" ]
   assert [ "backup-folder" == "${backup_folder}" ]
 }
 
-@test "parseArgs with -s should set source_folder env var" {
-  # we trust the output here to be env vars from parseArgs
-  run parseArgs -s source-folder -s source-folder2
+@test "parseBackupArgs with -s should set source_folder env var" {
+  # we trust the output here to be env vars from parseBackupArgs
+  run parseBackupArgs -s source-folder -s source-folder2
   eval "${output}"
   refute [ -z "${source_folder}" ]
   assert [ 2 -eq "${#source_folder[@]}" ]
@@ -54,20 +70,36 @@ source components/parse-args.sh
   assert [ "source-folder2" == "${source_folder[1]}" ]
 }
 
-@test "parseArgs with -r should set gpg_recipient env var" {
-  # we trust the output here to be env vars from parseArgs
-  run parseArgs -r me@example.com
+@test "parseBackupArgs with -r should set gpg_recipient env var" {
+  # we trust the output here to be env vars from parseBackupArgs
+  run parseBackupArgs -r me@example.com
   eval "${output}"
   refute [ -z "${gpg_recipient}" ]
   assert [ "me@example.com" == "${gpg_recipient}" ]
 }
 
-@test "parseArgs with other args should set args array" {
-  # we trust the output here to be env vars from parseArgs
-  run parseArgs -k -l
+@test "parseBackupArgs with other args should set args array" {
+  # we trust the output here to be env vars from parseBackupArgs
+  run parseBackupArgs -k -l
   eval "${output}"
   refute [ -z "${args}" ]
   assert [ 2 -eq "${#args[@]}" ]
   assert [ "-k" == "${args[0]}" ]
   assert [ "-l" == "${args[1]}" ]
+}
+
+@test "verifyArgs fails when no command used" {
+  # we trust the output here to be env vars from parseBackupArgs
+  # arrange
+  run parseCommands
+  eval "${output}"
+  function exitWith () { echo "$1"; exit 250; }
+  export -f exitWith
+
+  # act
+  run verifyArgs
+
+  # assert
+  assert_output --partial "no selected command"
+  assert [ $status -eq 250 ]
 }
