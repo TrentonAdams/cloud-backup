@@ -31,30 +31,20 @@ function exitWith(){
   exit 99;
 }
 
+function encrypt(){
+  gpg -r "${gpg_recipient}" --encrypt
+}
+
 function main() {
   skip_s3="true"
   my_args=`parseArgs "$@"`
-
   eval "${my_args}"
 
-  [[ ! -z "${show_help}" ]] && { show_help; exit 1; }
-
-  [[ -d "${source_folder}" ]] || { exitWith "missing source folder ${source_folder}"; }
-
-  function encrypt(){
-    gpg -r "${gpg_recipient}" --encrypt
-  }
+  verifyArgs
 
   command -v split || { exitWith "split command not installed";}
   command -v aws || { exitWith "aws cli not installed"; }
   command -v tar || { exitWith "tar not installed"; }
-  [[ -d "${backup_folder}" ]] || { exitWith "missing backup folder ${backup_folder}" ; }
-
-  [[ "function" == "$(type -t encrypt)" ]] || { exitWith "encrypt function must exist"; }
-  [[ ! -z "${backup_name}" ]] || { exitWith "backup name empty"; }
-  [[ ! -z "${gpg_recipient}" ]] || { exitWith "missing gpg recipient" ; }
-
-  [[ "true" == "$skip_s3" ]] || aws s3 ls "${s3_bucket_name}" >/dev/null || exitWith "s3 bucket access problem?"
 
   index=$(date +'%s')
 

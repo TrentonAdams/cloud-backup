@@ -46,3 +46,16 @@ while :; do
     shift
 done
 }
+
+# Simply verifies all arguments have passed as they should
+# TODO create array of messages to display, and then exit if it's count is
+#  non-zero
+function verifyArgs() {
+  [[ ! -z "${show_help}" ]] && { show_help; exit 1; }
+  [[ -d "${source_folder}" ]] || { exitWith "missing source folder ${source_folder}"; }
+  [[ -d "${backup_folder}" ]] || { exitWith "missing backup folder ${backup_folder}" ; }
+  [[ "function" == "$(type -t encrypt)" ]] || { exitWith "encrypt function must exist"; }
+  [[ ! -z "${backup_name}" ]] || { exitWith "backup name empty"; }
+  [[ ! -z "${gpg_recipient}" ]] || { exitWith "missing gpg recipient" ; }
+  [[ "true" == "$skip_s3" ]] || aws s3 ls "${s3_bucket_name}" >/dev/null || exitWith "s3 bucket access problem?"
+}
