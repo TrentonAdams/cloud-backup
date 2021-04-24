@@ -41,6 +41,8 @@ my_args=`parseArgs "$@"`
 
 eval "${my_args}"
 
+[[ ! -z "${show_help}" ]] && { show_help; exit 1; }
+
 [[ -d "${source_folder}" ]] || { exitWith "missing source folder ${source_folder}"; }
 
 function encrypt(){

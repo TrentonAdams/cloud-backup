@@ -3,6 +3,13 @@ load 'libs/bats-support/load'
 load 'libs/bats-assert/load'
 source components/parse-args.sh
 
+@test "parseArgs with -h should set show_help env var" {
+  # we trust the output here to be env vars from parseArgs
+  run parseArgs -h
+  eval "${output}"
+  refute [ -z "${show_help}" ]
+}
+
 @test "parseArgs with -b should set s3_bucket_name env var" {
   # we trust the output here to be env vars from parseArgs
   run parseArgs -b bucket-name

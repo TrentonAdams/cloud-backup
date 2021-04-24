@@ -1,10 +1,13 @@
+# We have to print env vars for arguments set because BATS runs commands
+# and functions in subshells, so any environment setting within a function is
+# not available in a test.
+
 function parseArgs() {
 # Here's some example parameter handling, -d has no args, -p has an argument
 while :; do
   case $1 in
     -h|-\?|--help)
-      show_help    # Display a usage synopsis.
-      exit
+      echo "show_help=true"
       ;;
     -b|--bucket)
       shift
