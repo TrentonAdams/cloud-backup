@@ -52,7 +52,7 @@ function main() {
   [[ -f "${backup_folder}/${backup_name}.sp" ]] || { index=0 ; }
   backup_file="${backup_folder}/${backup_name}.${index}.backup"
 
-  tar -czg "${backup_folder}/${backup_name}.sp" ${backup_exclude[@]} \
+  tar -czg "${backup_folder}/${backup_name}.sp" "${backup_exclude[@]}" \
     "${source_folder[@]}" | encrypt > "$backup_file"
 
   size=$(stat --printf="%s" "${backup_file}")
