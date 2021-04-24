@@ -1,7 +1,7 @@
 #!/usr/bin/env ./libs/bats/bin/bats
 load 'libs/bats-support/load'
 load 'libs/bats-assert/load'
-source show-help.sh
+source components/show-help.sh
 
 @test "requires show_help to show -p|--path" {
   run show_help

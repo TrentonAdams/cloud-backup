@@ -1,7 +1,7 @@
 #!/usr/bin/env ./libs/bats/bin/bats
 load 'libs/bats-support/load'
 load 'libs/bats-assert/load'
-source parse-args.sh
+source components/parse-args.sh
 
 @test "parseArgs with -b should set s3_bucket_name env var" {
   # we trust the output here to be env vars from parseArgs

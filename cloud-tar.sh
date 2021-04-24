@@ -21,7 +21,10 @@
 #    copy them to a FAT32 USB drive.
 #
 
-source show-help.sh
+spath="$(readlink -f "$0")"
+bpath="$(dirname $spath)"
+
+source "${bpath}/components/show-help.sh"
 
 
 function exitWith(){
@@ -33,7 +36,7 @@ function exitWith(){
 
 skip_s3="true"
 
-source parse-args.sh
+source components/parse-args.sh
 my_args=`parseArgs "$@"`
 
 eval "${my_args}"
