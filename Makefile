@@ -1,7 +1,7 @@
 
 .PHONY: clean
 clean:
-	@rm -f cloud-tar
+	@rm -f cloud-tar cloud-tar-*
 
 .PHONY: tests
 tests:
@@ -19,6 +19,13 @@ cloud-tar:
 		cloud-tar.sh > cloud-tar
 	@chmod a+x cloud-tar
 	@echo './cloud-tar built'
+
+# Test with this...
+# GITHUB_REF=refs/tags/2.0.0.RC2 make clean cloud-tar release.tar.gz
+release.tar.gz: cloud-tar
+	tar -cvzf release.tar.gz cloud-tar
+	cp release.tar.gz cloud-tar-$${GITHUB_REF#refs/tags/}.tar.gz
+
 
 .PHONY: install
 install: cloud-tar
