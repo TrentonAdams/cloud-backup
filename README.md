@@ -41,7 +41,13 @@ An example tar-excludes.txt follows.  Replace `username` with your `${USER}`
 * add tests for main program
 * finish parseArgs testing
 * add integrity check (`tar -tvzg file.sp`)
-* add restore script
+* add restore script.
+* add backup deletion script.
+** Possibly `ls -1 backup-dir/name.*.spb | tail -2` to get previous backup snapshot file
+** Decrypt backup snapshot file to `backup-dir/name.sp`
+** Delete files for `ls -1 backup-dir/name.*.spb | tail -1`
+** Delete files for `ls -1 backup-dir/name.*.backup* | tail -1`
+** Previous won't quite work, as we need to account for split file names.  So we need to grab the timestamp from the most recent backup file name, and then deleted wildcarded `name.*.backup*`
 * make "splitting" at 4G an option, not a requirement.
 * create asciinema demo.
 * add argument for backup size warning
