@@ -34,12 +34,14 @@ function exitWith(){
 skip_s3="true"
 
 source parse-args.sh
-parseArgs "$@"
+my_args=`parseArgs "$@"`
+
+eval "${my_args}"
 
 [[ -d "$source_folder" ]] || { exitWith "missing source folder $source_folder"; }
 
 function encrypt(){
-  gpg -r trent.gpg@trentonadams.ca --encrypt
+  gpg -r "${gpg_recipient}" --encrypt
 }
 
 command -v split || { exitWith "split command not installed";}
@@ -49,6 +51,7 @@ command -v tar || { exitWith "tar not installed"; }
 
 [[ "function" == "$(type -t encrypt)" ]] || { exitWith "encrypt function must exist"; }
 [[ ! -z "$backup_name" ]] || { exitWith "backup name empty"; }
+[[ ! -z "$gpg_recipient" ]] || { exitWith "missing gpg recipient" ; }
 
 [[ "true" == "$skip_s3" ]] || aws s3 ls "$s3_bucket_name" >/dev/null || exitWith "s3 bucket access problem?"
 
@@ -71,7 +74,7 @@ fi
 # encrypt tar snapshot to snapshot backup
 cat "$backup_folder/${backup_name}.sp" | encrypt > "$backup_folder/${backup_name}.${index}.spb"
 
-if (($size > 150000000)); then
+if (($size > 3900000000)); then
   # TODO
   # - add step to print out how to revert the snapshot file and backup 
   #   to start over

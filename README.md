@@ -23,6 +23,7 @@ To back up...
 
 # TODO
                      
+* add tests for main program
 * finish parseArgs testing
 * add integrity check (`tar -tvzg file.sp`)
 * add restore script

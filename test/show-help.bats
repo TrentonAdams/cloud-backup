@@ -27,3 +27,8 @@ source show-help.sh
   run show_help
   assert_output --partial "-e|--exclude"
 }
+
+@test "requires show_help to show -r|--recipient" {
+  run show_help
+  assert_output --partial "-r|--recipient"
+}
