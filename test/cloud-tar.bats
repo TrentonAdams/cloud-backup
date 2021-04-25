@@ -54,3 +54,33 @@ source ./cloud-tar.sh
   rm -rf files/ backup/
 }
 
+@test "backup should include incrementally added files" {
+  rm -rf files/ backup/
+  # arrange
+  mkdir -p files backup
+  for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
+  # act
+  run cloudTar backup \
+    -s ./files/ \
+    -p backup/ \
+    -n test-backup;
+  assert [ -f backup/test-backup.sp ]
+  assert [ -f backup/test-backup.0.spb ]
+  assert [ -f backup/test-backup.0.backup ]
+
+  touch "files/file-11"
+  run cloudTar backup \
+    -s ./files/ \
+    -p backup/ \
+    -n test-backup;
+  assert [ $(ls -1 ./backup/test-backup.*.backup | wc -l) -eq 2 ]
+
+  # assert
+  # most recent backup should have file-11
+  function listBackup() { cat $(ls -1 backup/test-backup.*.backup | tail -1) | tar -tvz; }
+  run listBackup
+  assert_output --partial "files/file-11";
+  refute_output --partial "files/file-10";
+  rm -rf files/ backup/
+}
+
