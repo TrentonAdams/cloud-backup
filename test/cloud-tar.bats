@@ -41,12 +41,13 @@ source ./cloud-tar.sh
     -s ./files/ \
     -p backup/ \
     -n test-backup;
-  function listBackup() { cat backup/test-backup.0.backup | gpg -d | tar -tvz; }
-  run listBackup
   # assert
   assert [ -f backup/test-backup.sp ]
   assert [ -f backup/test-backup.0.spb ]
   assert [ -f backup/test-backup.0.backup ]
+
+  function listBackup() { cat backup/test-backup.0.backup | gpg -d | tar -tvz; }
+  run listBackup
   for i in {1..10}; do
     assert_output --partial "files/file-${i}";
   done
