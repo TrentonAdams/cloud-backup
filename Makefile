@@ -16,6 +16,10 @@ cloud-tar:
 		-e 'r components/parse-args.sh' \
 		-e 'd' \
 		-e '}' \
+		-e '/source components\/backup.sh/ {' \
+		-e 'r components/backup.sh' \
+		-e 'd' \
+		-e '}' \
 		cloud-tar.sh > cloud-tar
 	@chmod a+x cloud-tar
 	@echo './cloud-tar built'
