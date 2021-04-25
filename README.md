@@ -1,4 +1,6 @@
 # Cloud TAR
+                   
+WARNING: this project probably does not support MacOS/BSD unless you install the appropriate GNU utilities.  If you'd like it to work with default MacOS/BSD tools, please submit a patch that detects them and uses different behaviour for MacOS/BSD only; complete with tests.
 
 Backup scripts to manage incremental backups using gnu tar's incremental snapshot capability, while supporting an s3 sync as well.
 
