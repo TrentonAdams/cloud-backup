@@ -1,7 +1,7 @@
 
 .PHONY: clean
 clean:
-	@rm -f cloud-tar cloud-tar-*
+	@rm -f cloud-tar cloud-tar-* cloud-tar.tar.gz
 
 .PHONY: tests
 tests:
