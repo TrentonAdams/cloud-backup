@@ -110,8 +110,9 @@ function cloudTar() {
     aws s3 sync "${backup_folder}/" "s3://${s3_bucket_name}/" --exclude '*.sp'
 }
 
+# only run cloudTar if this script was executed (not sourced)
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-  cloudTar "$@"
   [[ -z "${gpg_recipient}" ]] &&
-    echo "WARNING your backup was not encrypted, as no gpg recipient was specified"
+    echo "WARNING your backup will not be encrypted, as no gpg recipient was specified"
+  cloudTar "$@"
 fi
