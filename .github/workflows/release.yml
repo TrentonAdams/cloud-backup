@@ -1,0 +1,26 @@
+name: Releases
+
+on:
+  push:
+    tags-ignore:
+      - '*RC*'
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Test
+        run: make tests
+
+      - name: Build/Package
+        run: make release.tar.gz
+
+      - uses: ncipollo/release-action@v1.8.4
+        with:
+          artifacts: "cloud-tar-*.tar.gz"
+          token: ${{ secrets.GITHUB_TOKEN }}
