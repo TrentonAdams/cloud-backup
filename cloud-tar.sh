@@ -31,10 +31,15 @@ function exitWith() {
 }
 
 function encrypt() {
-  gpg -r "${gpg_recipient}" --encrypt
+  # only encrypt if recipient given
+  if [[ -z "${gpg_recipient}" ]]; then
+    cat
+  else
+    gpg -r "${gpg_recipient}" --encrypt
+  fi
 }
 
-function verifyDependencies() {
+function verifyRequiredCommands() {
   command -v split >/dev/null || { exitWith "split command not installed"; }
   command -v aws >/dev/null || { exitWith "aws cli not installed"; }
   command -v tar >/dev/null || { exitWith "tar not installed"; }
@@ -91,15 +96,13 @@ function doBackup() {
 function cloudTar() {
   skip_s3="true"
   my_args=$(parseCommands "$@")
-  echo $my_args
   eval "${my_args}"
 
   my_args=$(parseBackupArgs "$@")
-  echo $my_args
   eval "${my_args}"
 
   verifyArgs
-  verifyDependencies
+  verifyRequiredCommands
   doBackup
 
   # ${backup_name}.sp stays unencrypted for next round, so we don't upload it
@@ -109,4 +112,6 @@ function cloudTar() {
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   cloudTar "$@"
+  [[ -z "${gpg_recipient}" ]] &&
+    echo "WARNING your backup was not encrypted, as no gpg recipient was specified"
 fi
