@@ -3,7 +3,28 @@
 Backup scripts to manage incremental backups using gnu tar's incremental snapshot capability, while supporting an s3 sync as well.
 
 This should work for other people now.  I'm still I'm learning [BATS](https://github.com/sstephenson/bats) and adding a bunch of automated tests though to ensure everything continues working as expected as I continue to make adjustments.
-    
+
+## Install
+
+Download the [latest release](https://github.com/TrentonAdams/cloud-tar/releases/latest) tar.gz.  If you just want to install directly to /usr/local/bin/, you can run the following...
+
+```bash
+# swap the -t for -x after you've confirmed the tar listing is only putting cloud-tar in `/usr/local/bin/`
+
+curl -s https://api.github.com/repos/TrentonAdams/cloud-tar/releases/latest \
+  | jq -r '.assets[0].browser_download_url' \
+  | read -r latest; curl -s -L $latest \
+  | sudo tar -tvz -C /usr/local/bin
+```
+
+Alternatively clone the repo and install in /usr/local/bin.
+
+```bash
+git clone --recurse-submodules git@github.com:TrentonAdams/cloud-tar.git
+cd cloud-tar/
+make clean tests install
+```
+
 ## Usage                  
 To back up...
 1. user named "${USER}" from your USER environment var
@@ -13,11 +34,8 @@ To back up...
 5. using `~/backup/tar-excludes.txt` as the tar exclusion file
 
 So let's clone, run tests, and run a test backup.
-
+    
 ```bash
-git clone --recurse-submodules git@github.com:TrentonAdams/cloud-tar.git
-cd cloud-tar/
-make clean tests install
 cloud-tar backup \
   -s /home/${USER} \
   -p /media/backup/cloud-tar \
