@@ -18,7 +18,7 @@ source ./cloud-tar.sh
   mkdir -p files backup
   for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
   # act
-  run main backup \
+  run cloudTar backup \
     -r ${gpg_recipient} \
     -s ./files/ \
     -p backup/ \

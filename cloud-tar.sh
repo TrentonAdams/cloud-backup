@@ -88,7 +88,7 @@ function doBackup() {
   notifyLargeBackup
 }
 
-function main() {
+function cloudTar() {
   skip_s3="true"
   my_args=$(parseCommands "$@")
   echo $my_args
@@ -108,5 +108,5 @@ function main() {
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-  main "$@"
+  cloudTar "$@"
 fi
