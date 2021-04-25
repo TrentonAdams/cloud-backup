@@ -88,7 +88,7 @@ source components/parse-args.sh
   assert [ "-l" == "${args[1]}" ]
 }
 
-@test "verifyArgs fails when no command used" {
+@test "verifyArgs should fail when no command used" {
   # we trust the output here to be env vars from parseBackupArgs
   # arrange
   run parseCommands
