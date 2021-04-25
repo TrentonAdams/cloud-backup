@@ -57,6 +57,14 @@ An example tar-excludes.txt follows.  Replace `username` with your `${USER}`.  T
 ## TODO
                      
 * add tests for main program
+  * create files to backup
+  * backup files
+  * touch existing file
+  * backup files
+  * delete a file
+  * backup files
+  * restore files
+  * compare restore dir to original
 * add integrity check (`tar -tvzg file.sp`)
 * add restore script.
 * add backup deletion script.
