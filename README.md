@@ -17,8 +17,8 @@ So let's clone, run tests, and run a test backup.
 ```bash
 git clone --recurse-submodules git@github.com:TrentonAdams/cloud-tar.git
 cd cloud-tar/
-./test/libs/bats/bin/bats test/*.bats
-./cloud-tar.sh \
+make clean tests install
+cloud-tar backup \
   -s /home/${USER} \
   -p /media/backup/cloud-tar \
   -n home \
@@ -27,7 +27,7 @@ cd cloud-tar/
   -b user-backup-home;
 ```
 
-An example tar-excludes.txt follows.  Replace `username` with your `${USER}`
+An example tar-excludes.txt follows.  Replace `username` with your `${USER}`.  Tar exclude files differ from rsync exclude files.  With tar excludes you have to use the full path that you're backing up.  With rsync excludes, it's relative to the last folder in the path you're backing up.   
 
 ```text
 /home/username/.config/google-chrome
