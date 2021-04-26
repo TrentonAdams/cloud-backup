@@ -4,11 +4,13 @@
 
 function parseCommands() {
   echo "mode=unselected;"
-# Here's some example parameter handling, -d has no args, -p has an argument
 while :; do
   case $1 in
     backup)
       echo "mode=backup;"
+      ;;
+    restore)
+      echo "mode=restore;"
       ;;
     *)
       break;

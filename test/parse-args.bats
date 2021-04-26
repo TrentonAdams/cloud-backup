@@ -19,6 +19,14 @@ source components/parse-args.sh
   assert [ "${mode}" == "backup" ]
 }
 
+@test "parseCommands with restore command should set mode=restore env var" {
+  # we trust the output here to be env vars from parseBackupArgs
+  run parseCommands restore
+  eval "${output}"
+  refute [ -z "${mode}" ]
+  assert [ "${mode}" == "restore" ]
+}
+
 @test "parseBackupArgs with -h should set show_help env var" {
   # we trust the output here to be env vars from parseBackupArgs
   run parseBackupArgs -h
