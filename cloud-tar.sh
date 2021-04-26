@@ -20,6 +20,8 @@
 #    copy them to a FAT32 USB drive.
 #
 
+# WARNING these source commands must remain exactly the same, otherwise an
+# update to the cloud-tar target in the Makefile must be made.
 source components/show-help.sh
 source components/parse-args.sh
 source components/backup.sh
