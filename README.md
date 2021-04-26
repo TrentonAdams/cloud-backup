@@ -57,19 +57,11 @@ An example tar-excludes.txt follows.  Replace `username` with your `${USER}`.  T
 ```
 
 ## TODO
-                     
-* add tests for main program
-  * create files to backup
-  * backup files
-  * touch existing file
-  * backup files
-  * delete a file
-  * backup files
-  * restore files
-  * compare restore dir to original
+
 * add integrity check (`tar -tvzg file.sp`)
 * add restore script.
-* add backup deletion script.
+* support syncing to sub-path in s3 bucket, so we can do repeated level 0 + successive backups.
+* add backup deletion script, where we can delete success backups as far back as we need, and restore the snapshot file to that point.
   * Possibly `ls -1 backup-dir/name.*.spb | tail -2` to get previous backup snapshot file
   * Decrypt backup snapshot file to `backup-dir/name.sp`
   * Delete files for `ls -1 backup-dir/name.*.spb | tail -1`

@@ -84,6 +84,78 @@ source ./cloud-tar.sh
   rm -rf files/ backup/
 }
 
+# This one is a bit unwieldly.  Basically it goes like this...
+# create files
+# backup
+# delete a file
+# backup
+# delete another file
+# backup
+# restore level 0
+# restore next backup and check proper file was deleted
+# restore next backup and check proper file was deleted
+# restore final backup and check proper file was deleted
+#
+# Additionally, this provides a framework for creating an automatic restore
+# feature.  We only need to implement folder based restores, where we assume
+# there's a level 0, and a succession of backups based off that level 0, in the
+# backup folder.
+
+@test "backup should support deleting files" {
+  rm -rf files/ backup/
+  # arrange
+  mkdir -p files backup
+  for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
+  # act
+  run cloudTar backup \
+    -s ./files/ \
+    -p backup/ \
+    -n test-backup;
+
+  rm -f "files/file-10"
+  run cloudTar backup \
+    -s ./files/ \
+    -p backup/ \
+    -n test-backup;
+  assert [ $(ls -1 ./backup/test-backup.*.backup | wc -l) -eq 2 ]
+
+  # ensure the ms timestamp gets updated.  If we go too fast, sometimes
+  # the backup index numbers will be the same.
+  sleep 1
+
+  rm -f "files/file-9"
+  run cloudTar backup \
+    -s ./files/ \
+    -p backup/ \
+    -n test-backup;
+  assert [ $(ls -1 ./backup/test-backup.*.backup | wc -l) -eq 3 ]
+  ls -ltr backup
+
+  # assert
+  # most recent backup should have file-10 listed as deleted
+  rm -rf files/
+  function testLevel0Backup() { tar -xvzf backup/test-backup.0.backup; }
+  run testLevel0Backup
+
+  function testIncrementalDelete() {
+    cat $(ls -1 backup/test-backup.*.backup | tail -2 | head -1) | \
+    tar -xvzg backup/test-backup.sp;
+  }
+  run testIncrementalDelete
+  
+  assert_output --regexp "Deleting.*file-10";
+
+  unset testIncrementalDelete
+  function testIncrementalDelete() {
+    cat $(ls -1 backup/test-backup.*.backup | tail -1) | \
+    tar -xvzg backup/test-backup.sp;
+  }
+  run testIncrementalDelete
+
+  assert_output --regexp "Deleting.*file-9";
+  rm -rf files/ backup/
+}
+
 @test "encrypt should support one recipient" {
   rm -f encrypted.txt decrypted.txt
   [[ -z "${recipient}" ]] && \
@@ -103,3 +175,4 @@ source ./cloud-tar.sh
   unset gpg_recipient
 }
 
+# TODO add gpg argument support in addition to -r
