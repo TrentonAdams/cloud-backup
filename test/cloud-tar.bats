@@ -84,3 +84,22 @@ source ./cloud-tar.sh
   rm -rf files/ backup/
 }
 
+@test "encrypt should support one recipient" {
+  rm -f encrypted.txt decrypted.txt
+  [[ -z "${recipient}" ]] && \
+    skip "skipping real test run without recipient env var";
+  export gpg_recipient="${recipient}"
+  function testEncrypt() { echo "hello" | encrypt > encrypted.txt; }
+  # act
+  run testEncrypt
+
+  # assert
+  function testDecrypt() { gpg -d -o - encrypted.txt 2>/dev/null; }
+  run testDecrypt
+  assert_output "hello"
+
+  # cleanup
+  rm -f encrypted.txt decrypted.txt
+  unset gpg_recipient
+}
+
