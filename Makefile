@@ -12,8 +12,12 @@ cloud-tar:
 		-e 'r components/show-help.sh' \
 		-e 'd' \
 		-e '}' \
-		-e '/source components\/parse-args.sh/ {' \
-		-e 'r components/parse-args.sh' \
+		-e '/source components\/parse-commands.sh/ {' \
+		-e 'r components/parse-commands.sh' \
+		-e 'd' \
+		-e '}' \
+		-e '/source components\/parse-backup-args.sh/ {' \
+		-e 'r components/parse-backup-args.sh' \
 		-e 'd' \
 		-e '}' \
 		-e '/source components\/backup.sh/ {' \
