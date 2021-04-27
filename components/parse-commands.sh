@@ -6,6 +6,9 @@ function parseCommands() {
   echo "mode=unselected;"
 while :; do
   case $1 in
+    -h | -\? | --help)
+      echo "show_help=true"
+      ;;
     backup)
       echo "mode=backup;"
       ;;

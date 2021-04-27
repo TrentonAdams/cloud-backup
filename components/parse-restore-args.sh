@@ -1,12 +1,7 @@
-function parseBackupArgs() {
+function parseRestoreArgs() {
   # Here's some example parameter handling, -d has no args, -p has an argument
   while :; do
     case $1 in
-    -b | --bucket)
-      shift
-      printf "s3_bucket_name='%s'\n" "$1"
-      echo "unset skip_s3"
-      ;;
     -e | --exclude)
       shift
       echo "backup_exclude=('--exclude-from')"
