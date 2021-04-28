@@ -29,16 +29,9 @@ function doBackup() {
   backup_file="${backup_folder}/${backup_name}.${backup_index}.backup"
 
   tar -czg "${backup_folder}/${backup_name}.sp" "${backup_exclude[@]}" \
-    "${source_folder[@]}" | encrypt >"$backup_file"
-
-  size=$(stat --printf="%s" "${backup_file}")
-  if (($size > 3900000000)); then
-    echo "berry large file, won't fit on FAT32"
-    split -b 4G "${backup_file}" "${backup_file}"
-    rm "${backup_file}" # delete original, it's now split into multiple segments
-  fi
+    "${source_folder[@]}" | encrypt | \
+    split -b 4G - "${backup_file}"
 
   # encrypt tar snapshot to snapshot backup
   cat "${backup_folder}/${backup_name}.sp" | encrypt >"${backup_folder}/${backup_name}.${backup_index}.spb"
-  notifyLargeBackup
 }

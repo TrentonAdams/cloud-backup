@@ -5,7 +5,7 @@ clean:
 
 .PHONY: tests
 tests:
-	./test/libs/bats/bin/bats test/*.bats
+	./test/libs/bats/bin/bats test/*.bats && git commit -a -m 'WIP from Makefile'
 
 cloud-tar:
 	@sed -e '/source components\/show-help.sh/ {' \

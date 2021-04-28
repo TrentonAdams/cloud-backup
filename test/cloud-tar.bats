@@ -46,7 +46,7 @@ source ./cloud-tar.sh
   assert [ -f backup/test-backup.0.spb ]
   assert [ -f backup/test-backup.0.backup ]
 
-  function listBackup() { cat backup/test-backup.0.backup | gpg -d | tar -tvz; }
+  function listBackup() { cat backup/test-backup.0.backup | gpg -d -o - | tar -tvz; }
   run listBackup
   for i in {1..10}; do
     assert_output --partial "files/file-${i}";
@@ -132,7 +132,6 @@ source ./cloud-tar.sh
   ls -ltr backup
 
   # assert
-  # most recent backup should have file-10 listed as deleted
   rm -rf files/
   function testLevel0Backup() { tar -xvzf backup/test-backup.0.backup; }
   run testLevel0Backup
@@ -141,8 +140,9 @@ source ./cloud-tar.sh
     cat $(ls -1 backup/test-backup.*.backup | tail -2 | head -1) | \
     tar -xvzg backup/test-backup.sp;
   }
+  # most previous backup should have file-10 listed as deleted
   run testIncrementalDelete
-  
+
   assert_output --regexp "Deleting.*file-10";
 
   unset testIncrementalDelete
@@ -150,6 +150,7 @@ source ./cloud-tar.sh
     cat $(ls -1 backup/test-backup.*.backup | tail -1) | \
     tar -xvzg backup/test-backup.sp;
   }
+  # most recent backup should have file-9 listed as deleted
   run testIncrementalDelete
 
   assert_output --regexp "Deleting.*file-9";
