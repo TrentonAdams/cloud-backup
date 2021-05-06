@@ -35,4 +35,5 @@ function verifyArgs() {
   [[ "function" == "$(type -t encrypt)" ]] || { exitWith "encrypt function must exist"; }
   [[ ! -z "${backup_name}" ]] || { exitWith "backup name empty"; }
   [[ "true" == "$skip_s3" ]] || aws s3 ls "${s3_bucket_name}" >/dev/null || exitWith "s3 bucket access problem?"
+  validateSubFolder;
 }

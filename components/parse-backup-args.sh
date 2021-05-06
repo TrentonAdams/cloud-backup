@@ -43,3 +43,16 @@ function parseBackupArgs() {
     shift
   done
 }
+
+
+function validateSubFolder() {
+#  echo "backup_sub_folder: ${backup_sub_folder}"
+  [[ -z "${backup_sub_folder}" ]] && { exit 0; }
+
+  if [[ ! -z "${backup_sub_folder}" ]]; then
+    [[ "${backup_sub_folder}" == /* ]] && { exitWith "sub-folder must not start with a '/'"; }
+    [[ "${backup_sub_folder}" == */ ]] && { exitWith "sub-folder must not end with a '/'"; }
+    true;
+  fi;
+
+}

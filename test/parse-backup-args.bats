@@ -72,3 +72,67 @@ source components/parse-backup-args.sh
   assert [ "-k" == "${args[0]}" ]
   assert [ "-l" == "${args[1]}" ]
 }
+
+@test "validateSubFolder should accept 'sub-folder'" {
+  # we trust the output here to be env vars from parseCommands
+  # arrange
+  run parseBackupArgs --sub-folder sub-folder
+  eval "${output}"
+  function exitWith () { echo "$1"; exit 250; }
+  export -f exitWith
+
+  # act
+  run validateSubFolder
+
+  # assert
+  assert_output ''
+  assert [ $status -eq 0 ]
+}
+
+@test "validateSubFolder should not accept '/' prefix with '/sub-folder'" {
+  # we trust the output here to be env vars from parseCommands
+  # arrange
+  run parseBackupArgs --sub-folder '/sub-folder'
+  eval "${output}"
+  function exitWith () { echo "$1"; exit 250; }
+  export -f exitWith
+
+  # act
+  run validateSubFolder
+
+  # assert
+  assert_output --regexp "sub-folder.*start.*'/'"
+  assert [ $status -eq 250 ]
+}
+
+@test "validateSubFolder should not accept '/' suffix with 'sub-folder/'" {
+  # we trust the output here to be env vars from parseCommands
+  # arrange
+  run parseBackupArgs --sub-folder 'sub-folder/'
+  eval "${output}"
+  function exitWith () { echo "$1"; exit 250; }
+  export -f exitWith
+
+  # act
+  run validateSubFolder
+
+  # assert
+  assert_output --regexp "sub-folder.*end.*'/'"
+  assert [ $status -eq 250 ]
+}
+
+@test "validateSubFolder should accept multiple sub-folders with 'sub-folder/another'" {
+  # we trust the output here to be env vars from parseCommands
+  # arrange
+  run parseBackupArgs --sub-folder 'sub-folder/another'
+  eval "${output}"
+  function exitWith () { echo "$1"; exit 250; }
+  export -f exitWith
+
+  # act
+  run validateSubFolder
+
+  # assert
+  assert_output ''
+  assert [ $status -eq 0 ]
+}
