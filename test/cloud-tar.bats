@@ -18,8 +18,8 @@ source ./cloud-tar.sh
     -n test-backup;
   assert [ -f backup/test-backup.sp ]
   assert [ -f backup/test-backup.0.spb ]
-  assert [ -f backup/test-backup.0.backup ]
-  function listBackup() { cat backup/test-backup.0.backup | tar -tvz; }
+  assert [ -f backup/test-backup.0.backupaa ]
+  function listBackup() { cat backup/test-backup.0.backupaa | tar -tvz; }
   run listBackup
   # assert
   for i in {1..10}; do
@@ -42,11 +42,13 @@ source ./cloud-tar.sh
     -p backup/ \
     -n test-backup;
   # assert
+
+  assert [ -d backup ]
   assert [ -f backup/test-backup.sp ]
   assert [ -f backup/test-backup.0.spb ]
-  assert [ -f backup/test-backup.0.backup ]
+  assert [ -f backup/test-backup.0.backupaa ]
 
-  function listBackup() { cat backup/test-backup.0.backup | gpg -d -o - | tar -tvz; }
+  function listBackup() { cat backup/test-backup.0.backupaa| gpg -d -o - | tar -tvz; }
   run listBackup
   for i in {1..10}; do
     assert_output --partial "files/file-${i}";
@@ -66,18 +68,18 @@ source ./cloud-tar.sh
     -n test-backup;
   assert [ -f backup/test-backup.sp ]
   assert [ -f backup/test-backup.0.spb ]
-  assert [ -f backup/test-backup.0.backup ]
+  assert [ -f backup/test-backup.0.backupaa ]
 
   touch "files/file-11"
   run cloudTar backup \
     -s ./files/ \
     -p backup/ \
     -n test-backup;
-  assert [ $(ls -1 ./backup/test-backup.*.backup | wc -l) -eq 2 ]
+  assert [ $(ls -1 ./backup/test-backup.*.backupaa | wc -l) -eq 2 ]
 
   # assert
   # most recent backup should have file-11
-  function listBackup() { cat $(ls -1 backup/test-backup.*.backup | tail -1) | tar -tvz; }
+  function listBackup() { cat $(ls -1 backup/test-backup.*.backupaa | tail -1) | tar -tvz; }
   run listBackup
   assert_output --partial "files/file-11";
   refute_output --partial "files/file-10";
@@ -117,7 +119,7 @@ source ./cloud-tar.sh
     -s ./files/ \
     -p backup/ \
     -n test-backup;
-  assert [ $(ls -1 ./backup/test-backup.*.backup | wc -l) -eq 2 ]
+  assert [ $(ls -1 ./backup/test-backup.*.backupaa | wc -l) -eq 2 ]
 
   # ensure the ms timestamp gets updated.  If we go too fast, sometimes
   # the backup index numbers will be the same.
@@ -128,16 +130,16 @@ source ./cloud-tar.sh
     -s ./files/ \
     -p backup/ \
     -n test-backup;
-  assert [ $(ls -1 ./backup/test-backup.*.backup | wc -l) -eq 3 ]
+  assert [ $(ls -1 ./backup/test-backup.*.backupaa | wc -l) -eq 3 ]
   ls -ltr backup
 
   # assert
   rm -rf files/
-  function testLevel0Backup() { tar -xvzf backup/test-backup.0.backup; }
+  function testLevel0Backup() { tar -xvzf backup/test-backup.0.backupaa; }
   run testLevel0Backup
 
   function testIncrementalDelete() {
-    cat $(ls -1 backup/test-backup.*.backup | tail -2 | head -1) | \
+    cat $(ls -1 backup/test-backup.*.backupaa | tail -2 | head -1) | \
     tar -xvzg backup/test-backup.sp;
   }
   # most previous backup should have file-10 listed as deleted
@@ -147,7 +149,7 @@ source ./cloud-tar.sh
 
   unset testIncrementalDelete
   function testIncrementalDelete() {
-    cat $(ls -1 backup/test-backup.*.backup | tail -1) | \
+    cat $(ls -1 backup/test-backup.*.backupaa | tail -1) | \
     tar -xvzg backup/test-backup.sp;
   }
   # most recent backup should have file-9 listed as deleted
