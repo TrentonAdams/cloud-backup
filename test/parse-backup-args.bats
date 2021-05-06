@@ -47,6 +47,14 @@ source components/parse-backup-args.sh
   assert [ "source-folder2" == "${source_folder[1]}" ]
 }
 
+@test "parseBackupArgs with --sub-folder should set backup_sub_folder env var" {
+  # we trust the output here to be env vars from parseBackupArgs
+  run parseBackupArgs --sub-folder sub-folder
+  eval "${output}"
+  refute [ -z "${backup_sub_folder}" ]
+  assert [ "sub-folder" == "${backup_sub_folder}" ]
+}
+
 @test "parseBackupArgs with -r should set gpg_recipient env var" {
   # we trust the output here to be env vars from parseBackupArgs
   run parseBackupArgs -r me@example.com

@@ -20,6 +20,10 @@ function parseBackupArgs() {
       shift
       printf "source_folder+=('%s')\n" "$1"
       ;;
+    --sub-folder)
+      shift
+      printf "backup_sub_folder='%s'\n" "$1"
+      ;;
     -n | --name)
       shift
       printf "backup_name='%s'\n" "$1"
