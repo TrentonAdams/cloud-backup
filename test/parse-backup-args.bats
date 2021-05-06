@@ -29,9 +29,9 @@ source components/parse-backup-args.sh
   assert [ "excludes.txt" == "${backup_exclude[1]}" ]
 }
 
-@test "parseBackupArgs with -p should set backup_folder env var" {
+@test "parseBackupArgs with -d should set backup_folder env var" {
   # we trust the output here to be env vars from parseBackupArgs
-  run parseBackupArgs -p backup-folder
+  run parseBackupArgs -d backup-folder
   eval "${output}"
   refute [ -z "${backup_folder}" ]
   assert [ "backup-folder" == "${backup_folder}" ]

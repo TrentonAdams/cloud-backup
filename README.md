@@ -38,7 +38,7 @@ So let's clone, run tests, and run a test backup.
 ```bash
 cloud-tar backup \
   -s /home/${USER} \
-  -p /media/backup/cloud-tar \
+  -d /media/backup/cloud-tar \
   -n home \
   -r me@example.com \
   -e ~/backup/tar-excludes.txt \

@@ -14,7 +14,7 @@ source ./cloud-tar.sh
   # act
   run cloudTar backup \
     -s ./files/ \
-    -p backup/ \
+    -d backup/ \
     -n test-backup;
   assert [ -f backup/test-backup.sp ]
   assert [ -f backup/test-backup.0.spb ]
@@ -39,7 +39,7 @@ source ./cloud-tar.sh
   run cloudTar backup \
     -r ${recipient} \
     -s ./files/ \
-    -p backup/ \
+    -d backup/ \
     -n test-backup;
   # assert
 
@@ -64,7 +64,7 @@ source ./cloud-tar.sh
   # act
   run cloudTar backup \
     -s ./files/ \
-    -p backup/ \
+    -d backup/ \
     -n test-backup;
   assert [ -f backup/test-backup.sp ]
   assert [ -f backup/test-backup.0.spb ]
@@ -73,7 +73,7 @@ source ./cloud-tar.sh
   touch "files/file-11"
   run cloudTar backup \
     -s ./files/ \
-    -p backup/ \
+    -d backup/ \
     -n test-backup;
   assert [ $(ls -1 ./backup/test-backup.*.backupaa | wc -l) -eq 2 ]
 
@@ -111,13 +111,13 @@ source ./cloud-tar.sh
   # act
   run cloudTar backup \
     -s ./files/ \
-    -p backup/ \
+    -d backup/ \
     -n test-backup;
 
   rm -f "files/file-10"
   run cloudTar backup \
     -s ./files/ \
-    -p backup/ \
+    -d backup/ \
     -n test-backup;
   assert [ $(ls -1 ./backup/test-backup.*.backupaa | wc -l) -eq 2 ]
 
@@ -128,7 +128,7 @@ source ./cloud-tar.sh
   rm -f "files/file-9"
   run cloudTar backup \
     -s ./files/ \
-    -p backup/ \
+    -d backup/ \
     -n test-backup;
   assert [ $(ls -1 ./backup/test-backup.*.backupaa | wc -l) -eq 3 ]
   ls -ltr backup

@@ -12,7 +12,7 @@ function parseBackupArgs() {
       echo "backup_exclude=('--exclude-from')"
       printf "backup_exclude+=('%s')\n" "$1"
       ;;
-    -p | --path)
+    -d | --destination)
       shift
       printf "backup_folder='%s'\n" "$1"
       ;;
