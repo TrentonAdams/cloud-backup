@@ -35,7 +35,29 @@ cd cloud-tar/
 make clean tests install
 ```
 
-## Usage
+## Examples
+
+### Concepts
+
+This script is based on simple concepts. The gorey details can be found on
+the [TAR Incremental Dumps Page](https://www.gnu.org/software/tar/manual/html_node/Incremental-Dumps.html)
+
+1. Start with level 0 backup, meaning initial backup. it's backup_index is 0, in
+   the form backup_name.0.backup??
+2. Subsequent backups get a timestamp with number of seconds since 1970 as their
+   backup_index value, in the form backup_name.1622047204.backup??
+3. To start over just delete backup_name.sp, resulting in a new backup_index 0
+   backup, and tar will automatically create a new level 0. Although it is best
+   to just backup to a new folder when you start a new level 0. The incremental
+   backups are useless if you overwrite the original level 0 anyhow.
+4. Make sure you are backing up to a new bucket or folder if starting over, so
+   that you don't get confused on which timestamped backups are relevant to your
+   current level 0. The incremental backups are useless if you overwrite the
+   original level 0 anyhow.
+5. We support splitting backups at 4G by default, so if you wanted you could
+   copy them to a FAT32 USB drive.
+
+### Usage
 
 To back up...
 
@@ -69,7 +91,7 @@ last folder in the path you're backing up.
 /home/username/.config/Code/CacheData
 ```
 
-## Restores
+### Full Backup Restore Example
 
 For now, restores are manual. We'll be adding features to manage them later on.
 Here's an example of some backups, along with restore.
