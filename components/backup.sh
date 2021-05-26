@@ -23,17 +23,17 @@ function notifyLargeBackup() {
 
 function doBackup() {
   backup_index=$(date +'%s')
-  [[ -z "${backup_sub_folder}" ]] || backup_folder="${backup_folder}/${backup_sub_folder}"
-  echo "${backup_folder}"
+  local local_backup_folder=${backup_folder}
+  [[ -z "${backup_sub_folder}" ]] || local_backup_folder="${backup_folder}/${backup_sub_folder}"
 
   # a previous snapshot does not exist, let's label this level 0
-  [[ -f "${backup_folder}/${backup_name}.sp" ]] || { backup_index=0; }
-  backup_file="${backup_folder}/${backup_name}.${backup_index}.backup"
+  [[ -f "${local_backup_folder}/${backup_name}.sp" ]] || { backup_index=0; }
+  backup_file="${local_backup_folder}/${backup_name}.${backup_index}.backup"
 
-  tar -czg "${backup_folder}/${backup_name}.sp" "${backup_exclude[@]}" \
+  tar -czg "${local_backup_folder}/${backup_name}.sp" "${backup_exclude[@]}" \
     "${source_folder[@]}" | encrypt | \
     split -b 4G - "${backup_file}"
 
   # encrypt tar snapshot to snapshot backup
-  cat "${backup_folder}/${backup_name}.sp" | encrypt >"${backup_folder}/${backup_name}.${backup_index}.spb"
+  cat "${local_backup_folder}/${backup_name}.sp" | encrypt >"${local_backup_folder}/${backup_name}.${backup_index}.spb"
 }
