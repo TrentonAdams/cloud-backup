@@ -4,6 +4,8 @@ WARNING: this project probably does not support MacOS/BSD unless you install the
 
 Backup scripts to manage incremental backups using gnu tar's incremental snapshot capability, while supporting an s3 sync as well.
 
+See [changelog.md](changelog.md)
+
 ## Install
 
 Download the [latest release](https://github.com/TrentonAdams/cloud-tar/releases/latest) tar.gz.  If you just want to install directly to /usr/local/bin/, you can run the following...
