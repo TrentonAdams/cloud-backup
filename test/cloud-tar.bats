@@ -16,6 +16,7 @@ source ./cloud-tar.sh
     -s ./files/ \
     -d backup/ \
     -n test-backup;
+#  assert [ ${status} -eq 0 ]
   assert [ -f backup/test-backup.sp ]
   assert [ -f backup/test-backup.0.spb ]
   assert [ -f backup/test-backup.0.backupaa ]

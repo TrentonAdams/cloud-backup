@@ -8,11 +8,17 @@
 # backup, and have tar remove them for you automatically as part of the restore.
 # gpg -d backup-name-####.spb > backup-name-####.sp
 # cat backup-name-####.backup* | gpg -d - | tar -xvzg backup-name-####.sp
+# The following URL provides a good breakdown of the tar incremental
+# functionality
+# https://www.gnu.org/software/tar/manual/html_node/Incremental-Dumps.html
 
 # This script is based on simple concepts
-# 1. start with level 0 backup, meaning initial backup.  it's backup_index is 0
-# 2. subsequent backups get a ms timestamp since 1970 as their backup_index value.
-# 3. to start over just delete home.sp, resulting in a new backup_index 0 backup
+# 1. start with level 0 backup, meaning initial backup.  it's backup_index is 0,
+#    in the form backup_name.0.backup??
+# 2. subsequent backups get a ms timestamp since 1970 as their backup_index
+#    value, in the form backup_name.1622047204.backup??
+# 3. to start over just delete home.sp, resulting in a new backup_index 0
+#    backup, and tar will automatically create a new level 0.
 # 4. make sure you are backing up to a new bucket or folder if starting over, so
 #    that you don't get confused on which timestamped backups are
 #    relevant to your current level 0.
@@ -23,8 +29,8 @@
 # WARNING these source commands must remain exactly the same, otherwise an
 # update to the cloud-tar target in the Makefile must be made.
 source components/show-help.sh
-source components/parse-commands.sh
 source components/parse-backup-args.sh
+source components/parse-commands.sh
 source components/backup.sh
 
 function exitWith() {
