@@ -100,12 +100,13 @@ Let's do level 0 and two incremental backups with added files then deleted
 files.
 
 ```
+recipient=me@example.com
 rm -rf files backup; mkdir -p files backup;
 for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done;
 cloud-tar backup \
   -s ./files/ \
   -d backup/ \
-  -r trent.gpg@trentonadams.ca \
+  -r "${recipient}" \
   -n test-backup;
 
 sleep 1;
@@ -113,7 +114,7 @@ for i in {11..15}; do echo "file${i}" > "files/file-${i}"; done;
 cloud-tar backup \
   -s ./files/ \
   -d backup/ \
-  -r trent.gpg@trentonadams.ca \
+  -r "${recipient}" \
   -n test-backup;
 
 sleep 1;
@@ -122,7 +123,7 @@ rm -f files/file-{9,10};
 cloud-tar backup \
   -s ./files/ \
   -d backup/ \
-  -r trent.gpg@trentonadams.ca \
+  -r "${recipient}" \
   -n test-backup;
 ```
 
@@ -187,8 +188,6 @@ tar: Deleting ‘./files/file-10’
 
 * add integrity check (`tar -tvzg file.sp`)
 * add restore script.
-* support syncing to sub-path in s3 bucket, so we can do repeated level 0 +
-  successive backups.
 * add backup deletion script, where we can delete success backups as far back as
   we need, and restore the snapshot file to that point.
     * Possibly `ls -1 backup-dir/name.*.spb | tail -2` to get previous backup
