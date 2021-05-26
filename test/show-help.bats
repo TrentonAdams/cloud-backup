@@ -9,9 +9,9 @@ source components/show-help.sh
   assert_output --partial "bats-exec-test backup"
 }
 
-@test "requires show_help to show help on -p|--path" {
+@test "requires show_help to show help on -d|--destination" {
   run show_help
-  assert_output --partial "-p|--path"
+  assert_output --partial "-d|--destination"
 }
 
 @test "requires show_help to show help on -s|--source" {
@@ -37,4 +37,9 @@ source components/show-help.sh
 @test "requires show_help to show help on -r|--recipient" {
   run show_help
   assert_output --partial "-r|--recipient"
+}
+
+@test "requires show_help to show help on --sub-folder" {
+  run show_help
+  assert_output --partial "--sub-folder"
 }
