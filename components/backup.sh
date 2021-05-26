@@ -23,6 +23,8 @@ function notifyLargeBackup() {
 
 function doBackup() {
   backup_index=$(date +'%s')
+  [[ -z "${backup_sub_folder}" ]] || backup_folder="${backup_folder}/${backup_sub_folder}"
+  echo "${backup_folder}"
 
   # a previous snapshot does not exist, let's label this level 0
   [[ -f "${backup_folder}/${backup_name}.sp" ]] || { backup_index=0; }

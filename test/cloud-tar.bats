@@ -179,4 +179,28 @@ source ./cloud-tar.sh
   unset gpg_recipient
 }
 
+@test "backup should create sub-folder in backup folder" {
+  rm -rf files/ backup/
+  # arrange
+  mkdir -p files backup/sub-folder
+  for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
+  # act
+  run cloudTar backup \
+    -s ./files/ \
+    -d backup/ \
+    --sub-folder sub-folder \
+    -n test-backup;
+  assert [ -d backup/sub-folder ]
+#  assert [ ${status} -eq 0 ]
+  assert [ -f backup/sub-folder/test-backup.sp ]
+  assert [ -f backup/sub-folder/test-backup.0.spb ]
+  assert [ -f backup/sub-folder/test-backup.0.backupaa ]
+  function listBackup() { cat backup/sub-folder/test-backup.0.backupaa | tar -tvz; }
+  run listBackup
+  # assert
+  for i in {1..10}; do
+    assert_output --partial "files/file-${i}";
+  done
+  rm -rf files/ backup/
+}
 # TODO add gpg argument support in addition to -r
