@@ -44,8 +44,8 @@ the [TAR Incremental Dumps Page](https://www.gnu.org/software/tar/manual/html_no
 
 1. Start with level 0 backup, meaning initial backup. it's backup_index is 0, in
    the form backup_name.0.backup??
-2. Subsequent backups get a timestamp with number of seconds since 1970 as their
-   backup_index value, in the form backup_name.1622047204.backup??
+2. Subsequent backups get a timestamp with number of milliseconds since 1970 as 
+   their backup_index value, in the form backup_name.1622074049793.backup??
 3. To start over just delete backup_name.sp, resulting in a new backup_index 0
    backup, and tar will automatically create a new level 0. Although it is best
    to just backup to a new folder when you start a new level 0. The incremental

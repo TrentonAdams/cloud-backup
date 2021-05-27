@@ -22,7 +22,7 @@ function notifyLargeBackup() {
 }
 
 function doBackup() {
-  backup_index=$(date +'%s')
+  backup_index=$(date +'%s%3N')
   local local_backup_folder=${backup_folder}
   [[ -z "${backup_sub_folder}" ]] || local_backup_folder="${backup_folder}/${backup_sub_folder}"
 

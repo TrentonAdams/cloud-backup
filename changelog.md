@@ -1,3 +1,6 @@
+### 2.Y.Z
+- use milliseconds since 1970 as backup index.
+
 ### 2.1.0
 - Add --sub-folder option; see `cloud-tar -h` for more information
 
