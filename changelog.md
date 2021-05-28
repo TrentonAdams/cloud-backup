@@ -1,4 +1,5 @@
-### 2.Y.Z
+### 2.2.0
+- support multiple gpg recipients with multiple -r arguments.
 - use milliseconds since 1970 as backup index.
 
 ### 2.1.0

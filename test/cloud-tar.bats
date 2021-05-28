@@ -164,7 +164,7 @@ source ./cloud-tar.sh
   rm -f encrypted.txt decrypted.txt
   [[ -z "${recipient}" ]] && \
     skip "skipping real test run without recipient env var";
-  export gpg_recipient="${recipient}"
+  export gpg_recipients=("${recipient}")
   function testEncrypt() { echo "hello" | encrypt > encrypted.txt; }
   # act
   run testEncrypt
@@ -176,7 +176,7 @@ source ./cloud-tar.sh
 
   # cleanup
   rm -f encrypted.txt decrypted.txt
-  unset gpg_recipient
+  unset gpg_recipients
 }
 
 @test "backup should create sub-folder in backup folder" {

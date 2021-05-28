@@ -1,5 +1,6 @@
 function parseBackupArgs() {
   # Here's some example parameter handling, -d has no args, -p has an argument
+  printf "gpg_recipients=();"
   while :; do
     case $1 in
     -b | --bucket)
@@ -30,7 +31,7 @@ function parseBackupArgs() {
       ;;
     -r | --recipient)
       shift
-      printf "gpg_recipient='%s'\n" "$1"
+      printf "gpg_recipients+=('%s')\n" "$1"
       ;;
     ?*)
       printf "args+=('%s')\n" "$1"

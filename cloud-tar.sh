@@ -42,10 +42,12 @@ function exitWith() {
 
 function encrypt() {
   # only encrypt if recipient given
-  if [[ -z "${gpg_recipient}" ]]; then
+  if [[ -z "${gpg_recipients}" ]]; then
     cat
   else
-    gpg -r "${gpg_recipient}" --encrypt
+    recipients=();
+    for email in "${gpg_recipients[@]}"; do recipients+=(-r "${email}"); done
+    gpg "${recipients[@]}" --encrypt
   fi
 }
 
@@ -66,7 +68,7 @@ function cloudTar() {
   my_args=$(parseBackupArgs "$@")
   eval "${my_args}"
 
-  [[ -z "${gpg_recipient}" ]] &&
+  [[ -z "${gpg_recipients}" ]] &&
     echo "WARNING your backup will not be encrypted, as no gpg recipient was specified"
 
   verifyArgs
