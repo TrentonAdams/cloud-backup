@@ -141,7 +141,7 @@ source ./cloud-tar.sh
 
   function testIncrementalDelete() {
     cat $(ls -1 backup/test-backup.*.backupaa | tail -2 | head -1) | \
-    tar -xvzg backup/test-backup.sp;
+    tar -xvzg /dev/null;
   }
   # most previous backup should have file-10 listed as deleted
   run testIncrementalDelete
@@ -151,7 +151,7 @@ source ./cloud-tar.sh
   unset testIncrementalDelete
   function testIncrementalDelete() {
     cat $(ls -1 backup/test-backup.*.backupaa | tail -1) | \
-    tar -xvzg backup/test-backup.sp;
+    tar -xvzg /dev/null;
   }
   # most recent backup should have file-9 listed as deleted
   run testIncrementalDelete
