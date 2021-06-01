@@ -30,8 +30,6 @@ done
 function verifyArgs() {
   [[ ! -z "${show_help}" ]] && { show_help; exit 1; }
   [[ ${mode} == unselected ]] && { exitWith "no selected command"; }
-  [[ -d "${source_folder}" ]] || { exitWith "missing source folder ${source_folder}"; }
-  [[ -d "${destination_folder}" ]] || { exitWith "missing backup folder ${destination_folder}" ; }
   [[ "function" == "$(type -t encrypt)" ]] || { exitWith "encrypt function must exist"; }
   [[ ! -z "${backup_name}" ]] || { exitWith "backup name empty"; }
   [[ "true" == "$skip_s3" ]] || aws s3 ls "${s3_bucket_name}" >/dev/null || exitWith "s3 bucket access problem?"

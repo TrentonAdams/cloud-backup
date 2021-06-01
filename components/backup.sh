@@ -22,6 +22,9 @@ function notifyLargeBackup() {
 }
 
 function doBackup() {
+  [[ -d "${source_folder}" ]] || { exitWith "missing source folder ${source_folder}"; }
+  [[ -d "${destination_folder}" ]] || { exitWith "missing backup folder ${destination_folder}" ; }
+
   backup_index=$(date +'%s%3N')
   local local_destination_folder=${destination_folder}
   [[ -z "${backup_sub_folder}" ]] || local_destination_folder="${destination_folder}/${backup_sub_folder}"

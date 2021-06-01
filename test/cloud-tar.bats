@@ -209,3 +209,27 @@ source ./cloud-tar.sh
   rm -rf files/ backup/
 }
 # TODO add gpg argument support in addition to -r
+
+@test "restore should support one file" {
+  # arrange
+  mkdir -p files backup
+  for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
+  # act
+  run cloudTar backup \
+    -s ./files/ \
+    -d backup/ \
+    -n test-backup;
+
+  assert [ -f ./backup/test-backup.*.backupaa ]
+
+  run cloudTar restore \
+    -s backup \
+    -d restore \
+    -n test-backup;
+  assert [ -d restore ];
+  for i in {1..10}; do
+    assert_output --partial "./files/file-${i}";
+  done
+
+  rm -rf backup restore files
+}

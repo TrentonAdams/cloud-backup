@@ -32,6 +32,7 @@ source components/show-help.sh
 source components/parse-backup-args.sh
 source components/parse-commands.sh
 source components/backup.sh
+source components/restore.sh
 
 function exitWith() {
   echo "$1"
@@ -73,7 +74,11 @@ function cloudTar() {
 
   verifyArgs
   verifyRequiredCommands
-  doBackup
+  if [[ "${mode}" == "backup" ]]; then
+    doBackup
+  elif [[ "${mode}" == "restore" ]]; then
+    doRestore
+  fi;
 
   # ${backup_name}.sp stays unencrypted for next round, so we don't upload it
   [[ "$skip_s3" != "true" ]] &&
