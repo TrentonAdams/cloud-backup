@@ -109,15 +109,12 @@ cloud-tar backup \
   -r "${recipient}" \
   -n test-backup;
 
-sleep 1;
 for i in {11..15}; do echo "file${i}" > "files/file-${i}"; done;
 cloud-tar backup \
   -s ./files/ \
   -d backup/ \
   -r "${recipient}" \
   -n test-backup;
-
-sleep 1;
 
 rm -f files/file-{9,10};
 cloud-tar backup \
@@ -127,39 +124,35 @@ cloud-tar backup \
   -n test-backup;
 ```
 
-Let's take a look at what we have. From this point forward you'll have to get
-this working for the timestamps your backup is currently making.
+Let's take a look at what we have, and how to restore.
 
 ```
-$ ls -ltr backup             
+$ ls -ltr backup
 total 28
--rw-rw-r-- 1 trenta trenta 429 May 26 17:03 test-backup.0.spb
--rw-rw-r-- 1 trenta trenta 683 May 26 17:03 test-backup.0.backupaa
--rw-rw-r-- 1 trenta trenta 441 May 26 17:03 test-backup.1622070190.spb
--rw-rw-r-- 1 trenta trenta 610 May 26 17:03 test-backup.1622070190.backupaa
--rw-rw-r-- 1 trenta trenta 197 May 26 17:03 test-backup.sp
--rw-rw-r-- 1 trenta trenta 494 May 26 17:03 test-backup.1622070191.backupaa
--rw-rw-r-- 1 trenta trenta 435 May 26 17:03 test-backup.1622070191.spb
+-rw-rw-r-- 1 trenta trenta 685 Jun  1 00:26 test-backup.0.backupaa
+-rw-rw-r-- 1 trenta trenta 431 Jun  1 00:26 test-backup.0.spb
+-rw-rw-r-- 1 trenta trenta 442 Jun  1 00:26 test-backup.1622528789886.spb
+-rw-rw-r-- 1 trenta trenta 610 Jun  1 00:26 test-backup.1622528789886.backupaa
+-rw-rw-r-- 1 trenta trenta 191 Jun  1 00:26 test-backup.sp
+-rw-rw-r-- 1 trenta trenta 437 Jun  1 00:26 test-backup.1622528789900.spb
+-rw-rw-r-- 1 trenta trenta 488 Jun  1 00:26 test-backup.1622528789900.backupaa            
 ```
 
-To restore we want to decrypt first, so we use gpg for that. If you didn't
-use `-r recipient` there's no need for the `gpg -d`.
+Restoring is as simple as running the restore process
 
 ```
-rm -rf files
-cat backup/test-backup.0.spb | gpg -d > current.sp
-cat backup/test-backup.0.backupaa | gpg -d | tar -g current.sp -xvz
-cat backup/test-backup.1622070190.spb | gpg -d > current.sp
-cat backup/test-backup.1622070190.backupaa | gpg -d | tar -g current.sp -xvz
-cat backup/test-backup.1622070191.spb | gpg -d > current.sp
-cat backup/test-backup.1622070191.backupaa | gpg -d | tar -g current.sp -xvz
+cloud-tar restore \
+    -s backup \
+    -d restore \
+    -n test-backup
 ```
 
 Take special note that it properly deletes the files that were removed as part
 of the restore process...
 
 ```
-gpg info output here
+restoring backup/test-backup.0.backupaa
+gpg output info here
 ./files/
 ./files/file-1
 ./files/file-10
@@ -171,14 +164,16 @@ gpg info output here
 ./files/file-7
 ./files/file-8
 ./files/file-9
-gpg info output here
+restoring backup/test-backup.1622528789886.backupaa
+gpg output info here
 ./files/
 ./files/file-11
 ./files/file-12
 ./files/file-13
 ./files/file-14
 ./files/file-15
-gpg info output here
+restoring backup/test-backup.1622528789900.backupaa
+gpg output info here
 ./files/
 tar: Deleting ‘./files/file-9’
 tar: Deleting ‘./files/file-10’
@@ -187,7 +182,6 @@ tar: Deleting ‘./files/file-10’
 ## TODO
 
 * add integrity check (`tar -tvzg file.sp`)
-* add restore script.
 * add backup deletion script, where we can delete success backups as far back as
   we need, and restore the snapshot file to that point.
     * Possibly `ls -1 backup-dir/name.*.spb | tail -2` to get previous backup

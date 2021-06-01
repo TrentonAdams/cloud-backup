@@ -1,3 +1,6 @@
+### 2.3.1
+- README update for 2.3.0
+
 ### 2.3.0
 - add support for restoring backups by name from a source folder (the backup folder)
 
