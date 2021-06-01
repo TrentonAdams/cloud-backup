@@ -4,6 +4,7 @@ function doRestore() {
 
   ls -ltr "${source_folder}"
   for backup in ${source_folder}/${backup_name}.*.backup*; do
-    tar -C "${destination_folder}" -g /dev/null -tvzf "${backup}"
+    echo "restoring ${backup}"
+    tar -C "${destination_folder}" -g /dev/null -xvzf "${backup}"
   done
 }

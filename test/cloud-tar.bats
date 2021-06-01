@@ -210,7 +210,7 @@ source ./cloud-tar.sh
 }
 # TODO add gpg argument support in addition to -r
 
-@test "restore should support one file" {
+@test "restore should support one backup file" {
   # arrange
   mkdir -p files backup
   for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
@@ -231,5 +231,47 @@ source ./cloud-tar.sh
     assert_output --partial "./files/file-${i}";
   done
 
+  rm -rf backup restore files
+}
+
+@test "restore should support multiple backup files" {
+  rm -rf backup restore files
+  # arrange
+  mkdir -p files backup
+  for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
+  # act
+  run cloudTar backup \
+    -s ./files/ \
+    -d backup/ \
+    -n test-backup;
+
+  assert [ -f ./backup/test-backup.*.backupaa ]
+
+  rm -f "files/file-10"
+  run cloudTar backup \
+    -s ./files/ \
+    -d backup/ \
+    -n test-backup;
+  assert [ $(ls -1 ./backup/test-backup.*.backupaa | wc -l) -eq 2 ]
+
+  rm -f "files/file-9"
+  run cloudTar backup \
+    -s ./files/ \
+    -d backup/ \
+    -n test-backup;
+  assert [ $(ls -1 ./backup/test-backup.*.backupaa | wc -l) -eq 3 ]
+
+  # assert
+  run cloudTar restore \
+    -s backup \
+    -d restore \
+    -n test-backup;
+  assert [ -d restore ];
+
+  for i in {1..10}; do
+    assert_output --regexp "\.\/files\/file-${i}";
+  done
+  assert_output --regexp "Deleting.*file-10";
+  assert_output --regexp "Deleting.*file-9";
   rm -rf backup restore files
 }
