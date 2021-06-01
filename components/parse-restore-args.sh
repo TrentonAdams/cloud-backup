@@ -6,7 +6,7 @@ function parseRestoreArgs() {
       shift
       printf "backup_folder='%s'\n" "$1"
       ;;
-    -r | --restore)
+    -d | --destination)
       shift
       printf "restore_folder+=('%s')\n" "$1"
       ;;

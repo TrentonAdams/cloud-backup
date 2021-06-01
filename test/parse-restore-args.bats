@@ -13,7 +13,7 @@ source components/parse-restore-args.sh
 
 @test "parseRestoreArgs with -r should set restore_folder env var" {
   # we trust the output here to be env vars from parseRestoreArgs
-  run parseRestoreArgs -r restore-folder
+  run parseRestoreArgs -d restore-folder
   eval "${output}"
   refute [ -z "${restore_folder}" ]
   assert [ "restore-folder" == "${restore_folder}" ]
