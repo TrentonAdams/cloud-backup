@@ -1,3 +1,6 @@
+### 2.3.0
+- add support for restoring backups by name from a source folder (the backup folder)
+
 ### 2.2.0
 - support multiple gpg recipients with multiple -r arguments.
 - use milliseconds since 1970 as backup index.
