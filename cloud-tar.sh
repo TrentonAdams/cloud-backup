@@ -73,10 +73,10 @@ function cloudTar() {
   eval "${my_args}"
 
   if [[ "${mode}" == "backup" ]]; then
-    [[ -z "${gpg_recipients}" ]] &&
-      echo "WARNING your backup will not be encrypted, as no gpg recipient was specified"
     my_args=$(parseBackupArgs "$@")
     eval "${my_args}"
+    [[ -z "${gpg_recipients}" ]] &&
+      echo "WARNING your backup will not be encrypted, as no gpg recipient was specified"
   elif [[ "${mode}" == "restore" ]]; then
     my_args=$(parseRestoreArgs "$@")
     eval "${my_args}"
