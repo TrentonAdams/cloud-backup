@@ -20,6 +20,14 @@ cloud-tar:
 		-e 'r components/parse-backup-args.sh' \
 		-e 'd' \
 		-e '}' \
+		-e '/source components\/parse-restore-args.sh/ {' \
+		-e 'r components/parse-restore-args.sh' \
+		-e 'd' \
+		-e '}' \
+		-e '/source components\/restore.sh/ {' \
+		-e 'r components/restore.sh' \
+		-e 'd' \
+		-e '}' \
 		-e '/source components\/backup.sh/ {' \
 		-e 'r components/backup.sh' \
 		-e 'd' \

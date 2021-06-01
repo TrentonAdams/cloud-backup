@@ -29,10 +29,15 @@
 # WARNING these source commands must remain exactly the same, otherwise an
 # update to the cloud-tar target in the Makefile must be made.
 source components/show-help.sh
+
 source components/parse-backup-args.sh
+
 source components/parse-restore-args.sh
+
 source components/parse-commands.sh
+
 source components/backup.sh
+
 source components/restore.sh
 
 function exitWith() {
@@ -76,11 +81,10 @@ function cloudTar() {
     my_args=$(parseRestoreArgs "$@")
     eval "${my_args}"
   fi;
-#  my_args=$(parseBackupArgs "$@")
-#  eval "${my_args}"
 
   verifyArgs
   verifyRequiredCommands
+
   if [[ "${mode}" == "backup" ]]; then
     doBackup
   elif [[ "${mode}" == "restore" ]]; then
