@@ -95,7 +95,7 @@ source ./cloud-tar.sh
 # delete another file
 # backup
 # restore level 0
-# restore next backup and check proper file was deleted
+# restore next backup and check proper files exist
 # restore next backup and check proper file was deleted
 # restore final backup and check proper file was deleted
 #
@@ -138,6 +138,11 @@ source ./cloud-tar.sh
   rm -rf files/
   function testLevel0Backup() { tar -xvzf backup/test-backup.0.backupaa; }
   run testLevel0Backup
+
+  for i in {1..10}; do
+    assert_output --regexp "\.\/files\/file-${i}";
+  done
+
 
   function testIncrementalDelete() {
     cat $(ls -1 backup/test-backup.*.backupaa | tail -2 | head -1) | \
