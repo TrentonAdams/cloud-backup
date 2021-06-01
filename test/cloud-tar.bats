@@ -38,7 +38,7 @@ source ./cloud-tar.sh
   for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
   # act
   run cloudTar backup \
-    -r ${recipient} \
+    -r "${recipient}" \
     -s ./files/ \
     -d backup/ \
     -n test-backup;
@@ -219,6 +219,35 @@ source ./cloud-tar.sh
     -s ./files/ \
     -d backup/ \
     -n test-backup;
+
+  assert [ -f ./backup/test-backup.*.backupaa ]
+
+  run cloudTar restore \
+    -s backup \
+    -d restore \
+    -n test-backup;
+#  assert [ -d restore ];
+  for i in {1..10}; do
+    assert_output --partial "./files/file-${i}";
+  done
+
+  rm -rf backup restore files
+}
+
+@test "restore should support gpg" {
+  [[ -z "${recipient}" ]] && \
+    skip "skipping real test run without recipient env var";
+    
+  # arrange
+  mkdir -p files backup
+  for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
+  
+  # act
+  run cloudTar backup \
+    -s ./files/ \
+    -d backup/ \
+    -r ${recipient} \
+    -n test-backup
 
   assert [ -f ./backup/test-backup.*.backupaa ]
 

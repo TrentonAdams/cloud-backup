@@ -30,6 +30,7 @@
 # update to the cloud-tar target in the Makefile must be made.
 source components/show-help.sh
 source components/parse-backup-args.sh
+source components/parse-restore-args.sh
 source components/parse-commands.sh
 source components/backup.sh
 source components/restore.sh
@@ -66,11 +67,17 @@ function cloudTar() {
   my_args=$(parseCommands "$@")
   eval "${my_args}"
 
-  my_args=$(parseBackupArgs "$@")
-  eval "${my_args}"
-
-  [[ -z "${gpg_recipients}" ]] &&
-    echo "WARNING your backup will not be encrypted, as no gpg recipient was specified"
+  if [[ "${mode}" == "backup" ]]; then
+    [[ -z "${gpg_recipients}" ]] &&
+      echo "WARNING your backup will not be encrypted, as no gpg recipient was specified"
+    my_args=$(parseBackupArgs "$@")
+    eval "${my_args}"
+  elif [[ "${mode}" == "restore" ]]; then
+    my_args=$(parseRestoreArgs "$@")
+    eval "${my_args}"
+  fi;
+#  my_args=$(parseBackupArgs "$@")
+#  eval "${my_args}"
 
   verifyArgs
   verifyRequiredCommands

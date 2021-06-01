@@ -4,11 +4,11 @@ function parseRestoreArgs() {
     case $1 in
     -s | --source)
       shift
-      printf "destination_folder='%s'\n" "$1"
+      printf "source_folder='%s'\n" "$1"
       ;;
     -d | --destination)
       shift
-      printf "restore_folder+=('%s')\n" "$1"
+      printf "destination_folder+=('%s')\n" "$1"
       ;;
     -n | --name)
       shift

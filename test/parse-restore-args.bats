@@ -7,21 +7,21 @@ source components/parse-restore-args.sh
   # we trust the output here to be env vars from parseRestoreArgs
   run parseRestoreArgs -s backup-folder
   eval "${output}"
-  refute [ -z "${destination_folder}" ]
-  assert [ "backup-folder" == "${destination_folder}" ]
+  refute [ -z "${source_folder}" ]
+  assert [ "backup-folder" == "${source_folder}" ]
 }
 
 @test "parseRestoreArgs with -r should set restore_folder env var" {
   # we trust the output here to be env vars from parseRestoreArgs
   run parseRestoreArgs -d restore-folder
   eval "${output}"
-  refute [ -z "${restore_folder}" ]
-  assert [ "restore-folder" == "${restore_folder}" ]
+  refute [ -z "${destination_folder}" ]
+  assert [ "restore-folder" == "${destination_folder}" ]
 
-  run parseRestoreArgs --restore restore-folder
+  run parseRestoreArgs --destination restore-folder
   eval "${output}"
-  refute [ -z "${restore_folder}" ]
-  assert [ "restore-folder" == "${restore_folder}" ]
+  refute [ -z "${destination_folder}" ]
+  assert [ "restore-folder" == "${destination_folder}" ]
 }
 
 @test "parseRestoreArgs with -n should set backup_name env var" {
