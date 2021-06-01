@@ -77,7 +77,7 @@ function cloudTar() {
 
   # ${backup_name}.sp stays unencrypted for next round, so we don't upload it
   [[ "$skip_s3" != "true" ]] &&
-    aws s3 sync "${backup_folder}/" "s3://${s3_bucket_name}/" --exclude '*.sp'
+    aws s3 sync "${destination_folder}/" "s3://${s3_bucket_name}/" --exclude '*.sp'
 }
 
 # only run cloudTar if this script was executed (not sourced)

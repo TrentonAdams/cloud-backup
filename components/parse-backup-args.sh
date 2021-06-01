@@ -15,7 +15,7 @@ function parseBackupArgs() {
       ;;
     -d | --destination)
       shift
-      printf "backup_folder='%s'\n" "$1"
+      printf "destination_folder='%s'\n" "$1"
       ;;
     -s | --source)
       shift

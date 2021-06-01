@@ -3,12 +3,12 @@ load 'libs/bats-support/load'
 load 'libs/bats-assert/load'
 source components/parse-restore-args.sh
 
-@test "parseRestoreArgs with -s should set backup_folder env var" {
+@test "parseRestoreArgs with -s should set destination_folder env var" {
   # we trust the output here to be env vars from parseRestoreArgs
   run parseRestoreArgs -s backup-folder
   eval "${output}"
-  refute [ -z "${backup_folder}" ]
-  assert [ "backup-folder" == "${backup_folder}" ]
+  refute [ -z "${destination_folder}" ]
+  assert [ "backup-folder" == "${destination_folder}" ]
 }
 
 @test "parseRestoreArgs with -r should set restore_folder env var" {

@@ -13,8 +13,8 @@ function notifyLargeBackup() {
     echo "If this is your first backup, or you expected it to be large, you may ignore this." >>$tmp_file
     echo >>$tmp_file
     echo "If you'd like to start over, delete ${backup_file}, and " >>$tmp_file
-    echo "restore the most recent ${backup_folder}/${backup_name}.###.spb" >>$tmp_file
-    echo "to ${backup_folder}/${backup_name}.sp, but remember to decrypt" >>$tmp_file
+    echo "restore the most recent ${destination_folder}/${backup_name}.###.spb" >>$tmp_file
+    echo "to ${destination_folder}/${backup_name}.sp, but remember to decrypt" >>$tmp_file
     echo "it." >>$tmp_file
 
     cat "${tmp_file}"
@@ -23,17 +23,17 @@ function notifyLargeBackup() {
 
 function doBackup() {
   backup_index=$(date +'%s%3N')
-  local local_backup_folder=${backup_folder}
-  [[ -z "${backup_sub_folder}" ]] || local_backup_folder="${backup_folder}/${backup_sub_folder}"
+  local local_destination_folder=${destination_folder}
+  [[ -z "${backup_sub_folder}" ]] || local_destination_folder="${destination_folder}/${backup_sub_folder}"
 
   # a previous snapshot does not exist, let's label this level 0
-  [[ -f "${local_backup_folder}/${backup_name}.sp" ]] || { backup_index=0; }
-  backup_file="${local_backup_folder}/${backup_name}.${backup_index}.backup"
+  [[ -f "${local_destination_folder}/${backup_name}.sp" ]] || { backup_index=0; }
+  backup_file="${local_destination_folder}/${backup_name}.${backup_index}.backup"
 
-  tar -czg "${local_backup_folder}/${backup_name}.sp" "${backup_exclude[@]}" \
+  tar -czg "${local_destination_folder}/${backup_name}.sp" "${backup_exclude[@]}" \
     "${source_folder[@]}" | encrypt | \
     split -b 4G - "${backup_file}"
 
   # encrypt tar snapshot to snapshot backup
-  cat "${local_backup_folder}/${backup_name}.sp" | encrypt >"${local_backup_folder}/${backup_name}.${backup_index}.spb"
+  cat "${local_destination_folder}/${backup_name}.sp" | encrypt >"${local_destination_folder}/${backup_name}.${backup_index}.spb"
 }
