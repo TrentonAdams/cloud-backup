@@ -21,6 +21,17 @@ function notifyLargeBackup() {
   fi
 }
 
+function encrypt() {
+  # only encrypt if recipient given
+  if [[ -z "${gpg_recipients}" ]]; then
+    cat
+  else
+    recipients=();
+    for email in "${gpg_recipients[@]}"; do recipients+=(-r "${email}"); done
+    gpg "${recipients[@]}" --encrypt
+  fi
+}
+
 function doBackup() {
   [[ -d "${source_folder}" ]] || { exitWith "missing source folder ${source_folder}"; }
   [[ -d "${destination_folder}" ]] || { exitWith "missing backup folder ${destination_folder}" ; }

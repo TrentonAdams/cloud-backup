@@ -12,7 +12,10 @@ source ./cloud-tar.sh
   mkdir -p files backup
   for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
   # act
-  run cloudTar backup \
+  export source_folder=./files/
+  export destination_folder=backup/
+  export backup_name=test-backup
+  run doBackup \
     -s ./files/ \
     -d backup/ \
     -n test-backup;
@@ -37,7 +40,11 @@ source ./cloud-tar.sh
   mkdir -p files backup
   for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
   # act
-  run cloudTar backup \
+  export source_folder=./files/
+  export destination_folder=backup/
+  export backup_name=test-backup
+  export gpg_recipients=("${recipient}")
+  run doBackup \
     -r "${recipient}" \
     -s ./files/ \
     -d backup/ \
@@ -64,7 +71,10 @@ source ./cloud-tar.sh
   mkdir -p files backup
   for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
   # act
-  run cloudTar backup \
+  export source_folder=./files/
+  export destination_folder=backup/
+  export backup_name=test-backup
+  run doBackup \
     -s ./files/ \
     -d backup/ \
     -n test-backup;
@@ -73,7 +83,7 @@ source ./cloud-tar.sh
   assert [ -f backup/test-backup.0.backupaa ]
 
   touch "files/file-11"
-  run cloudTar backup \
+  run doBackup \
     -s ./files/ \
     -d backup/ \
     -n test-backup;
@@ -111,13 +121,16 @@ source ./cloud-tar.sh
   mkdir -p files backup
   for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
   # act
-  run cloudTar backup \
+  export source_folder=./files/
+  export destination_folder=backup/
+  export backup_name=test-backup
+  run doBackup \
     -s ./files/ \
     -d backup/ \
     -n test-backup;
 
   rm -f "files/file-10"
-  run cloudTar backup \
+  run doBackup \
     -s ./files/ \
     -d backup/ \
     -n test-backup;
@@ -128,7 +141,7 @@ source ./cloud-tar.sh
   sleep 1
 
   rm -f "files/file-9"
-  run cloudTar backup \
+  run doBackup \
     -s ./files/ \
     -d backup/ \
     -n test-backup;
@@ -191,7 +204,11 @@ source ./cloud-tar.sh
   mkdir -p files backup/sub-folder
   for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
   # act
-  run cloudTar backup \
+  export source_folder=./files/
+  export destination_folder=backup/
+  export backup_name=test-backup
+  export backup_sub_folder=sub-folder
+  run doBackup \
     -s ./files/ \
     -d backup/ \
     --sub-folder sub-folder \
@@ -216,7 +233,10 @@ source ./cloud-tar.sh
   mkdir -p files backup
   for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
   # act
-  run cloudTar backup \
+  export source_folder=./files/
+  export destination_folder=backup/
+  export backup_name=test-backup
+  run doBackup \
     -s ./files/ \
     -d backup/ \
     -n test-backup;
@@ -244,18 +264,22 @@ source ./cloud-tar.sh
   for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
   
   # act
-  run cloudTar backup \
-    -s ./files/ \
-    -d backup/ \
-    -r ${recipient} \
-    -n test-backup
+  export source_folder=./files/
+  export destination_folder=backup/
+  export backup_name=test-backup
+  export gpg_recipients=("${recipient}")
+
+  run doBackup
 
   assert [ -f ./backup/test-backup.*.backupaa ]
-
+  unset source_folder destination_folder backup_name gpg_recipients
+#  unset destination_folder
   run cloudTar restore \
     -s backup \
     -d restore \
     -n test-backup;
+  ls -ltr
+#  assert_output --partial "Hello"
   assert [ -d restore ];
   for i in {1..10}; do
     assert_output --partial "./files/file-${i}";
@@ -270,7 +294,11 @@ source ./cloud-tar.sh
   mkdir -p files backup
   for i in {1..10}; do echo "file${i}" > "files/file-${i}"; done
   # act
-  run cloudTar backup \
+  export source_folder=./files/
+  export destination_folder=backup/
+  export backup_name=test-backup
+
+  run doBackup \
     -s ./files/ \
     -d backup/ \
     -n test-backup;
@@ -278,20 +306,21 @@ source ./cloud-tar.sh
   assert [ -f ./backup/test-backup.*.backupaa ]
 
   rm -f "files/file-10"
-  run cloudTar backup \
+  run doBackup \
     -s ./files/ \
     -d backup/ \
     -n test-backup;
   assert [ $(ls -1 ./backup/test-backup.*.backupaa | wc -l) -eq 2 ]
 
   rm -f "files/file-9"
-  run cloudTar backup \
+  run doBackup \
     -s ./files/ \
     -d backup/ \
     -n test-backup;
   assert [ $(ls -1 ./backup/test-backup.*.backupaa | wc -l) -eq 3 ]
 
   # assert
+  unset source_folder destination_folder backup_name gpg_recipients
   run cloudTar restore \
     -s backup \
     -d restore \

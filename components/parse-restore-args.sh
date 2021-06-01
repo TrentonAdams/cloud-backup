@@ -4,18 +4,18 @@ function parseRestoreArgs() {
     case $1 in
     -s | --source)
       shift
-      printf "source_folder='%s'\n" "$1"
+      printf "export source_folder='%s';\n" "$1"
       ;;
     -d | --destination)
       shift
-      printf "destination_folder+=('%s')\n" "$1"
+      printf "export destination_folder+=('%s');\n" "$1"
       ;;
     -n | --name)
       shift
-      printf "backup_name='%s'\n" "$1"
+      printf "export backup_name='%s';\n" "$1"
       ;;
     ?*)
-      printf "args+=('%s')\n" "$1"
+      printf "export args+=('%s');\n" "$1"
       ;;
     *)
       break

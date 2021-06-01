@@ -47,17 +47,6 @@ function exitWith() {
   exit 99
 }
 
-function encrypt() {
-  # only encrypt if recipient given
-  if [[ -z "${gpg_recipients}" ]]; then
-    cat
-  else
-    recipients=();
-    for email in "${gpg_recipients[@]}"; do recipients+=(-r "${email}"); done
-    gpg "${recipients[@]}" --encrypt
-  fi
-}
-
 function verifyRequiredCommands() {
   command -v split >/dev/null || { exitWith "split command not installed"; }
   command -v aws >/dev/null || { exitWith "aws cli not installed"; }
@@ -67,6 +56,16 @@ function verifyRequiredCommands() {
   command -v mktemp >/dev/null || { exitWith "mktemp not installed"; }
 }
 
+# test parseCommands mock parseCommands
+#    output mode
+#    stub everything else and ignore
+# test mode backup
+#    test that parseBackupsArgs was called
+#    test that doBackup was called
+# test mode restore
+#    test that parseRestoreArgs was called
+#    test that doRestore was called
+# test aws was called when skip_s3 != true
 function cloudTar() {
   skip_s3="true"
   my_args=$(parseCommands "$@")
