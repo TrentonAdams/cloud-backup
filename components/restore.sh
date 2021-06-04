@@ -1,13 +1,3 @@
-function decrypt() {
-  # only encrypt if recipient given
-  gpg --pinentry-mode cancel --list-packets "${backup}" > /dev/null
-  if [ $? -eq 0 ]; then
-    gpg -d -o -
-  else
-    cat
-  fi
-}
-
 function doRestore() {
   [[ -d "${source_folder}" ]] || { exitWith "missing source folder ${source_folder}"; }
   mkdir -p "${destination_folder}" || { exitWith "unable to create folder ${destination_folder}"; }
