@@ -1,3 +1,7 @@
+### 2.3.3
+- make gpg file detection more reliable.  Specifically the previous method
+  didn't work unless the gpg key was already cached
+
 ### 2.3.2
 - fix gpg decryption bug
 

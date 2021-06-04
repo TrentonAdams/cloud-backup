@@ -14,7 +14,7 @@ function doRestore() {
 
   for backup in ${source_folder}/${backup_name}.*.backup*; do
     echo "restoring ${backup}"
-    gpg --pinentry-mode cancel --list-packets "${backup}" > /dev/null
+    file "${backup}"| grep PGP
     if [ $? -eq 0 ]; then
       gpg -d -o - "${backup}" | tar -C "${destination_folder}" -g /dev/null -xvz
     else
