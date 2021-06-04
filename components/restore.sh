@@ -14,6 +14,13 @@ function doRestore() {
 
   for backup in ${source_folder}/${backup_name}.*.backup*; do
     echo "restoring ${backup}"
-    cat "${backup}" | decrypt | tar -C "${destination_folder}" -g /dev/null -xvz
+    gpg --pinentry-mode cancel --list-packets "${backup}" > /dev/null
+    if [ $? -eq 0 ]; then
+      gpg -d -o - "${backup}" | tar -C "${destination_folder}" -g /dev/null -xvz
+    else
+      tar -C "${destination_folder}" -g /dev/null -xvzf "${backup}"
+    fi
+
+
   done
 }

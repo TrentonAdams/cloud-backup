@@ -57,7 +57,8 @@ source ./cloud-tar.sh
   assert [ -f backup/test-backup.0.backupaa ]
   refute_output --partial "WARNING your backup will not be encrypted, as no gpg recipient was specified"
 
-  function listBackup() { cat backup/test-backup.0.backupaa| gpg -d -o - | tar -tvz; }
+  function listBackup() { gpg -d -o - backup/test-backup.0.backupaa | tar -tvz; }
+
   run listBackup
   for i in {1..10}; do
     assert_output --partial "files/file-${i}";

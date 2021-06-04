@@ -1,3 +1,6 @@
+### 2.3.2
+- fix gpg decryption bug
+
 ### 2.3.1
 - README update for 2.3.0
 
