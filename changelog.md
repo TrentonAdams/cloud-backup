@@ -1,3 +1,10 @@
+### 2.4.0
+- support tar --no-check-device so that in cases where device numbers have
+  changed we don't essentially do a level 0 as if it were an incremental backup.
+  This is useful in the case of a restore to a new computer, followed by an
+  incremental backup of said computer.  Also, wsl in Windows 10 seems to change
+  device numbers or something.
+
 ### 2.3.3
 - make gpg file detection more reliable.  Specifically the previous method
   didn't work unless the gpg key was already cached

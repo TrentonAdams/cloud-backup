@@ -44,7 +44,8 @@ function doBackup() {
   [[ -f "${local_destination_folder}/${backup_name}.sp" ]] || { backup_index=0; }
   backup_file="${local_destination_folder}/${backup_name}.${backup_index}.backup"
 
-  tar -czg "${local_destination_folder}/${backup_name}.sp" "${backup_exclude[@]}" \
+  tar -czg "${local_destination_folder}/${backup_name}.sp" "${tar_args[@]}" \
+    "${backup_exclude[@]}" \
     "${source_folder[@]}" | encrypt | \
     split -b 4G - "${backup_file}"
 

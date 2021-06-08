@@ -138,3 +138,14 @@ source components/parse-backup-args.sh
   assert_output ''
   assert [ $status -eq 0 ]
 }
+
+@test "support tar --no-check-device" {
+  # we trust the output here to be env vars from parseCommands
+  # arrange
+  run parseBackupArgs --no-check-device
+  eval "${output}"
+
+  refute [ -z "${tar_args}" ]
+  assert [ 1 -eq "${#tar_args[@]}" ]
+  assert [ "--no-check-device" == "${tar_args[0]}" ]
+}
